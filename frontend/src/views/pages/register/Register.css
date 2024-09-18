@@ -1,0 +1,24 @@
+/* Login.css */
+
+.auth-background {
+    background-image: url('../../../assets/images/darck.jpg'); /* Ruta relativa desde el directorio público */
+    background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita la repetición de la imagen */
+    min-height: 100vh; /* Asegura que el contenedor cubra al menos la altura de la ventana */
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
+  }
+
+  .logo {
+    max-width: 100%; /* Ajusta el tamaño del logo si es necesario */
+    height: auto; /* Mantiene la proporción del logo */
+    margin-bottom: 20px; /* Espacio debajo del logo */
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  

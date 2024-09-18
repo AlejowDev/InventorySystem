@@ -1,0 +1,15 @@
+.logo-container {
+  padding-top: 10px;
+}
+
+/* Estilo para la imagen del logo */
+.logo-img {
+  width: 100%; /* Ajusta el tamaño para que sea responsivo */
+}
+
+/* Media queries para ajustar el tamaño del logo en pantallas pequeñas */
+@media (max-width: 768px) {
+  .logo-img {
+    max-width: 150px; /* Tamaño máximo en pantallas pequeñas */
+  }
+}
