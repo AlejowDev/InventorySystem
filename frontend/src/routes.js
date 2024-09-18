@@ -1,9 +1,18 @@
 import React from 'react'
 
-// Dashboard Pages
-const AdminDashboard = React.lazy(() => import('./views/admin/dashboard'))
-const ModeratorDashboard = React.lazy(() => import('./views/moderator/dashboard'))
-const StudentDashboard = React.lazy(() => import('./views/student/dashboard'))
+// Admin pages
+const AdminDashboard = React.lazy(() => import('./views/admin/Dashboard'))
+const AdminUsers = React.lazy(() => import('./views/admin/Users'))
+const AdminNewUsers = React.lazy(() => import('./views/admin/NewUsers'))
+
+
+//Moderator pages
+const ModeratorDashboard = React.lazy(() => import('./views/moderator/Dashboard'))
+const ModeratorUsers = React.lazy(() => import('./views/moderator/Users'))
+
+
+//Student pages
+const StudentDashboard = React.lazy(() => import('./views/student/Dashboard'))
 
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -57,8 +66,15 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  // Admin
   { path: '/admin/dashboard', name: 'Admin Dashboard', element: AdminDashboard },
+  { path: '/admin/users', name: 'Admin Users', element: AdminUsers },
+  { path: '/admin/newusers', name: 'Admin NewUsers', element: AdminNewUsers },
+  //Moderator
   { path: '/moderator/dashboard', name: 'Moderator Dashboard', element: ModeratorDashboard },
+  { path: '/moderator/users', name: 'Moderator Users', element: ModeratorUsers },
+
+  //Student
   { path: '/student/dashboard', name: 'Student Dashboard', element: StudentDashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

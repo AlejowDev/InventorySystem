@@ -9,7 +9,7 @@ import {
   CDropdownToggle,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilXCircle } from '@coreui/icons';
+import { cilRoom } from '@coreui/icons';
 
 import { clearAuth } from '../../services/auth';
 
@@ -57,7 +57,7 @@ const AppHeaderDropdown = () => {
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Cuenta</CDropdownHeader>
         <CDropdownItem href="#" onClick={handleLogout}>
-          <CIcon icon={cilXCircle} className="me-2" />
+          <CIcon icon={cilRoom} className="me-2" />
           Cerrar sesión
         </CDropdownItem>
       </CDropdownMenu>

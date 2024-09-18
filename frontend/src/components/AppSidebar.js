@@ -10,6 +10,7 @@ import {
 } from '@coreui/react';
 import logo from '../assets/images/logo.png';
 import { AppSidebarNav } from './AppSidebarNav';
+import { useNavigate } from 'react-router-dom';
 import adminNav from '../navigation/adminNav';
 import moderatorNav from '../navigation/moderatorNav';
 import studentNav from '../navigation/studentNav';
@@ -18,6 +19,7 @@ const AppSidebar = () => {
   const dispatch = useDispatch();
   const unfoldable = useSelector((state) => state.sidebarUnfoldable);
   const sidebarShow = useSelector((state) => state.sidebarShow);
+  const navigate = useNavigate();
 
   const [navigation, setNavigation] = useState([]);
 
@@ -26,18 +28,18 @@ const AppSidebar = () => {
 
     switch (role) {
       case 'admin':
-        setNavigation(adminNav);
+        setNavigation(adminNav(navigate));
         break;
       case 'moderator':
-        setNavigation(moderatorNav);
+        setNavigation(moderatorNav(navigate));
         break;
       case 'student':
-        setNavigation(studentNav);
+        setNavigation(studentNav(navigate));
         break;
       default:
-        setNavigation([]); // Default or guest navigation
+        setNavigation([]);
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <CSidebar

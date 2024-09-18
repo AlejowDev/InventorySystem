@@ -72,7 +72,7 @@ const Register = () => {
     <div className="auth-background min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={6} lg={4} xl={5}>
+          <CCol md={6} lg={5} xl={5}>
             <CCard className="bg-dark mx-4">
               <CCardBody className="p-4">
                 <CForm onSubmit={handleSubmit}>

@@ -12,8 +12,16 @@ const User = {
         db.query(query, [username], callback);
     },
     findAll: (callback) => {
-        const query = "SELECT * FROM users WHERE document != 1022932004";
+        const query = "SELECT * FROM users";
         db.query(query, callback);
+    },
+    delete: (document, callback) => {
+        const query = "DELETE FROM users WHERE document = ?";
+        db.query(query, [document], callback);
+    },
+    update: (document, userData, callback) => {
+        const query = "UPDATE users SET name = ?, username = ?, role = ? WHERE document = ?";
+        db.query(query, [userData.name, userData.username, userData.role, document], callback);
     }
 };
 

@@ -1,58 +1,48 @@
 // src/navigation/adminNav.js
-import CIcon from '@coreui/icons-react'
-import { cilSpeedometer, cilDrop, cilPencil, cilPuzzle } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import CIcon from '@coreui/icons-react';
+import { cilSpeedometer, cilList, cilUserFollow, cilRoom } from '@coreui/icons';
+import { CNavGroup, CNavItem, CNavTitle, CDropdownItem } from '@coreui/react';
+import { useNavigate } from 'react-router-dom';
+import { clearAuth } from '../services/auth'; // Ajusta la importación según tu estructura de proyecto
 
-const adminNav = [
+// Define una función que devuelve el arreglo de navegación con el botón de cerrar sesión
+const adminNav = (navigate) => [
   {
     component: CNavItem,
-    name: 'Dashboard',
+    name: 'Inicio',
     to: '/admin/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
-    name: 'Theme',
+    name: 'Usuarios',
   },
   {
     component: CNavItem,
-    name: 'Colors',
-    to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    name: 'Lista de usuarios',
+    to: '/admin/users',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Typography',
-    to: '/theme/typography',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+    name: 'Nuevo usuario',
+    to: '/admin/newusers',
+    icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
-    name: 'Components',
+    name: 'Salir',
   },
   {
-    component: CNavGroup,
-    name: 'Base',
-    to: '/base',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      { component: CNavItem, name: 'Accordion', to: '/base/accordion' },
-      { component: CNavItem, name: 'Breadcrumb', to: '/base/breadcrumbs' },
-      { component: CNavItem, name: 'Cards', to: '/base/cards' },
-      { component: CNavItem, name: 'Carousel', to: '/base/carousels' },
-      { component: CNavItem, name: 'Collapse', to: '/base/collapses' },
-      { component: CNavItem, name: 'List group', to: '/base/list-groups' },
-      { component: CNavItem, name: 'Navs & Tabs', to: '/base/navs' },
-      { component: CNavItem, name: 'Pagination', to: '/base/paginations' },
-      { component: CNavItem, name: 'Placeholders', to: '/base/placeholders' },
-      { component: CNavItem, name: 'Popovers', to: '/base/popovers' },
-      { component: CNavItem, name: 'Progress', to: '/base/progress' },
-      { component: CNavItem, name: 'Spinners', to: '/base/spinners' },
-      { component: CNavItem, name: 'Tables', to: '/base/tables' },
-      { component: CNavItem, name: 'Tabs', to: '/base/tabs' },
-      { component: CNavItem, name: 'Tooltips', to: '/base/tooltips' },
-    ],
-  },
+    component: CDropdownItem,
+    name: 'Cerrar sesión',
+    href: '#',
+    onClick: () => {
+      clearAuth();
+      navigate('/login');
+    },
+    icon: <CIcon icon={cilRoom} className="me-2" />,
+  }
 ];
 
 export default adminNav;

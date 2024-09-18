@@ -12,4 +12,35 @@ router.get('/users', (req, res) => {
     });
 });
 
+// Eliminar un usuario por Documento
+router.delete('/users/:document', (req, res) => {
+    const userDocument = req.params.document;
+
+    User.delete(userDocument, (error, result) => {
+      if (error) {
+        return res.status(500).json({ message: 'Error al eliminar el usuario' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+      res.status(200).json({ message: 'Usuario eliminado correctamente' });
+    });
+});
+
+// Actualizar usuario por Documento
+router.put('/users/:document', (req, res) => {
+  const userDocument = req.params.document;
+  const userData = req.body;
+
+  User.update(userDocument, userData, (error, result) => {
+      if (error) {
+          return res.status(500).json({ message: 'Error al actualizar el usuario' });
+      }
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+      res.status(200).json({ message: 'Usuario actualizado correctamente' });
+  });
+});
+
 module.exports = router;

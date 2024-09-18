@@ -79,7 +79,7 @@ const Login = () => {
     <div className="auth-background min-vh-100 d-flex flex-row align-items-center justify-content-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={4} className="d-flex justify-content-center">
+          <CCol md={6} lg={5} xl={4} className="d-flex justify-content-center">
             <CCardGroup>
               <CCard className="p-4 bg-dark">
                 <CCardBody>

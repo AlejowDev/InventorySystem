@@ -1,14 +1,25 @@
 // src/navigation/moderatorNav.js
-import CIcon from '@coreui/icons-react'
-import { cilSpeedometer, cilDrop, cilPencil, cilPuzzle, cilCursor, cilNotes, cilChartPie, cilStar, cilBell } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import CIcon from '@coreui/icons-react';
+import { cilSpeedometer, cilList, cilPuzzle, cilRoom } from '@coreui/icons';
+import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react';
+import { clearAuth } from '../services/auth';
 
-const moderatorNav = [
+const moderatorNav = (navigate) => [
   {
     component: CNavItem,
     name: 'Dashboard',
     to: '/moderator/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: 'Usuarios',
+  },
+  {
+    component: CNavItem,
+    name: 'Lista de usuarios',
+    to: '/moderator/users',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
   {
     component: CNavGroup,
@@ -32,6 +43,16 @@ const moderatorNav = [
       { component: CNavItem, name: 'Tabs', to: '/base/tabs' },
       { component: CNavItem, name: 'Tooltips', to: '/base/tooltips' },
     ],
+  },
+  {
+    component: CNavItem,
+    name: 'Cerrar sesión',
+    href: '#',
+    onClick: () => {
+      clearAuth();
+      navigate('/login');
+    },
+    icon: <CIcon icon={cilRoom} className="me-2" />,
   },
 ];
 
