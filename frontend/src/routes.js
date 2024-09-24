@@ -4,6 +4,8 @@ import React from 'react'
 const AdminDashboard = React.lazy(() => import('./views/admin/Dashboard'))
 const AdminUsers = React.lazy(() => import('./views/admin/Users'))
 const AdminNewUsers = React.lazy(() => import('./views/admin/NewUsers'))
+const AdminTools = React.lazy(() => import('./views/admin/Tools'))
+
 
 
 //Moderator pages
@@ -70,6 +72,7 @@ const routes = [
   { path: '/admin/dashboard', name: 'Admin Dashboard', element: AdminDashboard },
   { path: '/admin/users', name: 'Admin Users', element: AdminUsers },
   { path: '/admin/newusers', name: 'Admin NewUsers', element: AdminNewUsers },
+  { path: '/admin/tools', name: 'Admin Tools', element: AdminTools },
   //Moderator
   { path: '/moderator/dashboard', name: 'Moderator Dashboard', element: ModeratorDashboard },
   { path: '/moderator/users', name: 'Moderator Users', element: ModeratorUsers },

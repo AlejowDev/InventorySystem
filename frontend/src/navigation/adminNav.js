@@ -31,6 +31,16 @@ const adminNav = (navigate) => [
   },
   {
     component: CNavTitle,
+    name: 'Herramientas',
+  },
+  {
+    component: CNavItem,
+    name: 'Lista de herramientas',
+    to: '/admin/tools',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
     name: 'Salir',
   },
   {
