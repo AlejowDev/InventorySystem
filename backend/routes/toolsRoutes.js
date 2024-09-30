@@ -1,4 +1,4 @@
-//toolsRoutes.js
+// toolsRoutes.js
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -27,7 +27,7 @@ router.get('/tools', getAllTools);
 router.post('/tools', multer({ storage }).single('imagen'), createTool);
 
 // Actualizar herramienta
-router.put('/tools/:serial', updateTool);
+router.put('/tools/:serial', multer({ storage }).single('imagen'), updateTool); // Agregando multer para la actualización
 
 // Eliminar herramienta
 router.delete('/tools/:serial', deleteTool);

@@ -23,19 +23,25 @@ import {
   CFormInput,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPlus, cilTrash } from '@coreui/icons'
+import { cilPlus, cilTrash, cilPencil } from '@coreui/icons'
 
 const ToolsTable = () => {
   const [tools, setTools] = useState([])
   const [createModalVisible, setCreateModalVisible] = useState(false)
+  const [editModalVisible, setEditModalVisible] = useState(false)
   const [formData, setFormData] = useState({
     serial: '',
     nombre: '',
     descripcion: '',
-    imagen: null, // Inicializar como null
+    imagen: null,
   })
+  const [currentTool, setCurrentTool] = useState(null)
 
   useEffect(() => {
+    refreshTools()
+  }, [])
+
+  const refreshTools = () => {
     axios
       .get('http://localhost:8081/api/tools')
       .then((response) => {
@@ -44,7 +50,7 @@ const ToolsTable = () => {
       .catch((error) => {
         console.error('Error fetching tools:', error)
       })
-  }, [])
+  }
 
   const handleDelete = (toolSerial) => {
     Swal.fire({
@@ -92,12 +98,25 @@ const ToolsTable = () => {
     setCreateModalVisible(true)
   }
 
+  const handleEdit = (tool) => {
+    setFormData({
+      serial: tool.serial,
+      nombre: tool.nombre,
+      descripcion: tool.descripcion,
+      // Aquí no se debe establecer la imagen a null
+      imagen: tool.imagen, // Mantén la imagen actual
+    })
+    setCurrentTool(tool)
+    setEditModalVisible(true)
+  }
+  
+
   const handleSave = async () => {
-    const { serial, nombre, descripcion, imagen } = formData // Extraer valores de formData
+    const { serial, nombre, descripcion, imagen } = formData
     const formDataToSend = new FormData()
+    formDataToSend.append('serial', serial)
     formDataToSend.append('nombre', nombre)
     formDataToSend.append('descripcion', descripcion)
-    formDataToSend.append('serial', serial)
     formDataToSend.append('imagen', imagen)
 
     try {
@@ -106,14 +125,9 @@ const ToolsTable = () => {
           'Content-Type': 'multipart/form-data',
         },
       })
-      console.log('Tool created:', response.data)
-
-      // Actualizar el estado con la nueva herramienta
       setTools([...tools, response.data.tool])
-      setCreateModalVisible(false) // Cerrar modal después de crear
+      setCreateModalVisible(false)
       Swal.fire('Éxito', 'Herramienta creada exitosamente.', 'success')
-
-      // Refrescar la lista de herramientas
       refreshTools()
     } catch (error) {
       console.error('Error creating tool:', error)
@@ -121,16 +135,35 @@ const ToolsTable = () => {
     }
   }
 
-  const refreshTools = () => {
-    axios
-      .get('http://localhost:8081/api/tools')
-      .then((response) => {
-        setTools(response.data)
-      })
-      .catch((error) => {
-        console.error('Error fetching tools:', error)
-      })
+  const handleUpdate = async () => {
+    const { serial, nombre, descripcion, imagen } = formData
+    const formDataToSend = new FormData()
+  
+    formDataToSend.append('serial', serial) // Asegúrate de enviar el serial
+    if (nombre) formDataToSend.append('nombre', nombre)
+    if (descripcion) formDataToSend.append('descripcion', descripcion)
+    // Solo agrega la imagen si hay un archivo nuevo
+    if (imagen) formDataToSend.append('imagen', imagen)
+  
+    try {
+      const response = await axios.put(
+        `http://localhost:8081/api/tools/${serial}`,
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+      setEditModalVisible(false)
+      Swal.fire('Éxito', 'Herramienta actualizada exitosamente.', 'success')
+      refreshTools()
+    } catch (error) {
+      console.error('Error updating tool:', error)
+      Swal.fire('Error', 'No se pudo actualizar la herramienta.', 'error')
+    }
   }
+  
 
   return (
     <>
@@ -149,11 +182,11 @@ const ToolsTable = () => {
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                   <CTableRow>
-                    <CTableHeaderCell className="bg-body-tertiary">Serial</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Nombre</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Descripción</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Imagen</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Acciones</CTableHeaderCell>
+                    <CTableHeaderCell>Serial</CTableHeaderCell>
+                    <CTableHeaderCell>Nombre</CTableHeaderCell>
+                    <CTableHeaderCell>Descripción</CTableHeaderCell>
+                    <CTableHeaderCell>Imagen</CTableHeaderCell>
+                    <CTableHeaderCell>Acciones</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -162,8 +195,19 @@ const ToolsTable = () => {
                       <CTableDataCell>{tool.serial}</CTableDataCell>
                       <CTableDataCell>{tool.nombre}</CTableDataCell>
                       <CTableDataCell>{tool.descripcion}</CTableDataCell>
-                      <CTableDataCell>{tool.imagen}</CTableDataCell>
                       <CTableDataCell>
+                        {tool.imagen && (
+                          <img
+                            src={`http://localhost:8081/${tool.imagen}`}
+                            alt={tool.nombre}
+                            style={{ width: '60px', height: '60px' }}
+                          />
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <CButton color="info" size="sm" onClick={() => handleEdit(tool)}>
+                          <CIcon icon={cilPencil} />
+                        </CButton>{' '}
                         <CButton color="danger" size="sm" onClick={() => handleDelete(tool.serial)}>
                           <CIcon icon={cilTrash} />
                         </CButton>
@@ -210,7 +254,39 @@ const ToolsTable = () => {
             Cancelar
           </CButton>
           <CButton color="primary" onClick={handleSave}>
-            Crear herramienta
+            Guardar
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      {/* Modal para editar herramienta */}
+      <CModal visible={editModalVisible} onClose={() => setEditModalVisible(false)}>
+        <CModalHeader>
+          <CModalTitle>Editar Herramienta</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CForm>
+            <CFormInput
+              label="Nombre"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleInputChange}
+            />
+            <CFormInput
+              label="Descripción"
+              name="descripcion"
+              value={formData.descripcion}
+              onChange={handleInputChange}
+            />
+            <CFormInput label="Imagen" name="imagen" type="file" onChange={handleFileChange} />
+          </CForm>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setEditModalVisible(false)}>
+            Cancelar
+          </CButton>
+          <CButton color="primary" onClick={handleUpdate}>
+            Guardar Cambios
           </CButton>
         </CModalFooter>
       </CModal>
