@@ -14,9 +14,17 @@ const Tool = {
         db.query(query, [serial], callback);
     },
     update: (serial, toolData, callback) => {
-        const query = "UPDATE tools SET nombre = ?, descripcion = ?, imagen = ? WHERE serial = ?";
-        db.query(query, [toolData.nombre, toolData.descripcion, toolData.imagen, serial], callback);
-    },
+        let query = "UPDATE tools SET nombre = ?, descripcion = ?";
+        const params = [toolData.nombre, toolData.descripcion, serial];
+    
+        if (toolData.imagen) {
+            query += ", imagen = ?";
+            params.splice(2, 0, toolData.imagen); // Insertamos la imagen en la tercera posición de los parámetros
+        }
+    
+        query += " WHERE serial = ?";
+        db.query(query, params, callback);
+    },    
     delete: (serial, callback) => {
         const query = "DELETE FROM tools WHERE serial = ?";
         db.query(query, [serial], callback);

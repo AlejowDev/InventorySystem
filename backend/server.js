@@ -6,7 +6,8 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const usersRouter = require('./routes/users');
 const adminRoutes = require('./routes/adminRoutes');
-const toolsRoutes = require('./routes/toolsRoutes'); // Importar las rutas de herramientas
+const toolsRoutes = require('./routes/toolsRoutes');
+const loansRoutes = require('./routes/loansRoutes');
 
 const app = express();
 
@@ -19,7 +20,8 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api', usersRouter);
 app.use('/api/admin', adminRoutes);
-app.use('/api', toolsRoutes); // Usar las rutas de herramientas
+app.use('/api', toolsRoutes);
+app.use('/api', loansRoutes);
 
 app.listen(8081, () => {
     console.log("Listening on port 8081...");

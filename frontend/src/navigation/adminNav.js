@@ -1,6 +1,6 @@
 // src/navigation/adminNav.js
 import CIcon from '@coreui/icons-react';
-import { cilSpeedometer, cilList, cilUserFollow, cilRoom } from '@coreui/icons';
+import { cilSpeedometer, cilList, cilUserFollow, cilRoom, cilDevices, cilBook } from '@coreui/icons';
 import { CNavGroup, CNavItem, CNavTitle, CDropdownItem } from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
 import { clearAuth } from '../services/auth'; // Ajusta la importación según tu estructura de proyecto
@@ -15,29 +15,39 @@ const adminNav = (navigate) => [
   },
   {
     component: CNavTitle,
+    name: 'PRESTAMOS',
+  },
+  {
+    component: CNavItem,
+    name: 'Agenda de Préstamos',
+    to: '/admin/loans',
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
     name: 'Usuarios',
   },
   {
     component: CNavItem,
-    name: 'Lista de usuarios',
+    name: 'Lista de Usuarios',
     to: '/admin/users',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Nuevo usuario',
+    name: 'Nuevo Usuario',
     to: '/admin/newusers',
     icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
-    name: 'Herramientas',
+    name: 'INVENTARIO',
   },
   {
     component: CNavItem,
-    name: 'Lista de herramientas',
+    name: 'Lista de Inventario',
     to: '/admin/tools',
-    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilDevices} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

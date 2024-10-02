@@ -5,6 +5,7 @@ const AdminDashboard = React.lazy(() => import('./views/admin/Dashboard'))
 const AdminUsers = React.lazy(() => import('./views/admin/Users'))
 const AdminNewUsers = React.lazy(() => import('./views/admin/NewUsers'))
 const AdminTools = React.lazy(() => import('./views/admin/Tools'))
+const AdminLoans = React.lazy(() => import('./views/admin/Loans'))
 
 
 
@@ -73,6 +74,7 @@ const routes = [
   { path: '/admin/users', name: 'Admin Users', element: AdminUsers },
   { path: '/admin/newusers', name: 'Admin NewUsers', element: AdminNewUsers },
   { path: '/admin/tools', name: 'Admin Tools', element: AdminTools },
+  { path: '/admin/loans', name: 'Admin Loans', element: AdminLoans },
   //Moderator
   { path: '/moderator/dashboard', name: 'Moderator Dashboard', element: ModeratorDashboard },
   { path: '/moderator/users', name: 'Moderator Users', element: ModeratorUsers },

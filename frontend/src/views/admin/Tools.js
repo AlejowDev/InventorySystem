@@ -103,16 +103,21 @@ const ToolsTable = () => {
       serial: tool.serial,
       nombre: tool.nombre,
       descripcion: tool.descripcion,
-      // Aquí no se debe establecer la imagen a null
-      imagen: tool.imagen, // Mantén la imagen actual
-    })
-    setCurrentTool(tool)
-    setEditModalVisible(true)
-  }
-  
+      // No establecemos imagen aquí, ya que no queremos editarla
+    });
+    setCurrentTool(tool);
+    setEditModalVisible(true);
+  };
 
   const handleSave = async () => {
     const { serial, nombre, descripcion, imagen } = formData
+
+    // Validar que los campos no estén vacíos
+    if (!serial || !nombre || !descripcion || !imagen) {
+      Swal.fire('Error', 'Todos los campos son obligatorios.', 'error')
+      return
+    }
+
     const formDataToSend = new FormData()
     formDataToSend.append('serial', serial)
     formDataToSend.append('nombre', nombre)
@@ -136,14 +141,17 @@ const ToolsTable = () => {
   }
 
   const handleUpdate = async () => {
-    const { serial, nombre, descripcion, imagen } = formData
-    const formDataToSend = new FormData()
+    const { serial, nombre, descripcion } = formData; // No necesitamos la imagen aquí
+    const formDataToSend = new FormData();
   
-    formDataToSend.append('serial', serial) // Asegúrate de enviar el serial
-    if (nombre) formDataToSend.append('nombre', nombre)
-    if (descripcion) formDataToSend.append('descripcion', descripcion)
+    formDataToSend.append('serial', serial);
+    formDataToSend.append('nombre', nombre);
+    formDataToSend.append('descripcion', descripcion);
+  
     // Solo agrega la imagen si hay un archivo nuevo
-    if (imagen) formDataToSend.append('imagen', imagen)
+    if (formData.imagen) {
+      formDataToSend.append('imagen', formData.imagen);
+    }
   
     try {
       const response = await axios.put(
@@ -153,17 +161,16 @@ const ToolsTable = () => {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        },
-      )
-      setEditModalVisible(false)
-      Swal.fire('Éxito', 'Herramienta actualizada exitosamente.', 'success')
-      refreshTools()
+        }
+      );
+      setEditModalVisible(false);
+      Swal.fire('Éxito', 'Herramienta actualizada exitosamente.', 'success');
+      refreshTools();
     } catch (error) {
-      console.error('Error updating tool:', error)
-      Swal.fire('Error', 'No se pudo actualizar la herramienta.', 'error')
+      console.error('Error updating tool:', error);
+      Swal.fire('Error', 'No se pudo actualizar la herramienta.', 'error');
     }
-  }
-  
+  };
 
   return (
     <>
@@ -172,9 +179,9 @@ const ToolsTable = () => {
           <CCard className="mb-4">
             <CCardHeader>
               <div className="d-flex justify-content-between">
-                <span>Herramientas</span>
-                <CButton color="primary" onClick={handleCreate}>
-                  <CIcon icon={cilPlus} /> Crear
+                <span>Dispositivos y Herramientas para Préstamo.</span>
+                <CButton color="primary" size="sm" onClick={handleCreate}>
+                  <CIcon icon={cilPlus} /> Nuevo
                 </CButton>
               </div>
             </CCardHeader>
@@ -182,11 +189,11 @@ const ToolsTable = () => {
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                   <CTableRow>
-                    <CTableHeaderCell>Serial</CTableHeaderCell>
-                    <CTableHeaderCell>Nombre</CTableHeaderCell>
-                    <CTableHeaderCell>Descripción</CTableHeaderCell>
-                    <CTableHeaderCell>Imagen</CTableHeaderCell>
-                    <CTableHeaderCell>Acciones</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Serial</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Nombre</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Descripción</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Imagen</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Acciones</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
