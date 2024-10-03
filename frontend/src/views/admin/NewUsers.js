@@ -132,18 +132,21 @@ const AdminNewUsers = () => {
               </div>
 
               <div className="mb-3">
-              <CFormLabel htmlFor="password">Rol</CFormLabel>
+                <CFormLabel htmlFor="password">Rol</CFormLabel>
                 <CFormSelect id="role" name="role" value={formData.role} onChange={handleChange}>
-                  <option value="" disabled>Selecciona un rol</option>
+                  <option value="" disabled>
+                    Selecciona un rol
+                  </option>
                   <option value="student">Estudiante</option>
                   <option value="moderator">Moderador</option>
                   <option value="admin">Administrador</option>
                 </CFormSelect>
               </div>
-
-              <CButton type="submit" color="primary">
-                Crear Usuario
-              </CButton>
+              <div className="mb-3">
+                <CButton type="submit" className="custom-btn btn-md">
+                  Crear Usuario
+                </CButton>
+              </div>
             </CForm>
           </CCardBody>
         </CCard>

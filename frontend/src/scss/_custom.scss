@@ -14,24 +14,32 @@
   }
 }
 
+.custom-btn {
+  background-color: #0076e4; /* Color verde más oscuro al pasar el mouse */
+}
+
+.custom-btn:hover {
+  background-color: #369eff; /* Color verde más oscuro al pasar el mouse */
+}
+
 .custom-btn-edit {
-  background-color: #0a0094; /* Color verde */
+  background-color: #0076e4; /* Color verde */
   border: none; /* Quitar borde */
   color: white; /* Texto blanco */
 }
 
 .custom-btn-edit:hover {
-  background-color: #1100ff; /* Color verde más oscuro al pasar el mouse */
+  background-color: #369eff; /* Color verde más oscuro al pasar el mouse */
 }
 
 .custom-btn-delete {
-  background-color: #bd0d00; /* Color rojo */
+  background-color: #ff1100; /* Color rojo */
   border: none; /* Quitar borde */
   color: white; /* Texto blanco */
 }
 
 .custom-btn-delete:hover {
-  background-color: #ff0400; /* Color rojo más oscuro al pasar el mouse */
+  background-color: #ff3632; /* Color rojo más oscuro al pasar el mouse */
 }
 
 

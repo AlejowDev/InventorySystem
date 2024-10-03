@@ -36,6 +36,15 @@ const ToolsTable = () => {
     imagen: null,
   })
   const [currentTool, setCurrentTool] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null)
+
+  const handleImageClick = (imageSrc) => {
+    setSelectedImage(imageSrc); // Establece la imagen seleccionada para ampliar
+  }
+
+  const handleCloseImage = () => {
+    setSelectedImage(null); // Cierra la vista ampliada
+  }
 
   useEffect(() => {
     refreshTools()
@@ -180,8 +189,8 @@ const ToolsTable = () => {
             <CCardHeader>
               <div className="d-flex justify-content-between">
                 <span>Dispositivos y Herramientas para Préstamo.</span>
-                <CButton color="primary" size="sm" onClick={handleCreate}>
-                  <CIcon icon={cilPlus} /> Nuevo
+                <CButton className='custom-btn' size="sm" onClick={handleCreate}>
+                  Nuevo
                 </CButton>
               </div>
             </CCardHeader>
@@ -207,7 +216,8 @@ const ToolsTable = () => {
                           <img
                             src={`http://localhost:8081/${tool.imagen}`}
                             alt={tool.nombre}
-                            style={{ width: '40px', height: '40px' }}
+                            style={{ width: '40px', height: '40px', cursor: 'pointer' }}
+                            onClick={() => handleImageClick(`http://localhost:8081/${tool.imagen}`)} // Llama a la función al hacer clic
                           />
                         )}
                       </CTableDataCell>
@@ -260,7 +270,7 @@ const ToolsTable = () => {
           <CButton color="secondary" onClick={() => setCreateModalVisible(false)}>
             Cancelar
           </CButton>
-          <CButton color="primary" onClick={handleSave}>
+          <CButton className='custom-btn' onClick={handleSave}>
             Guardar
           </CButton>
         </CModalFooter>
@@ -292,8 +302,19 @@ const ToolsTable = () => {
           <CButton color="secondary" onClick={() => setEditModalVisible(false)}>
             Cancelar
           </CButton>
-          <CButton color="primary" onClick={handleUpdate}>
+          <CButton className='custom-btn' onClick={handleUpdate}>
             Guardar Cambios
+          </CButton>
+        </CModalFooter>
+      </CModal>
+      {/* Modal para la imagen ampliada */}
+      <CModal visible={!!selectedImage} onClose={handleCloseImage} size="lg">
+        <CModalBody className="text-center">
+          <img src={selectedImage} alt="Imagen Ampliada" style={{ width: '100%', height: 'auto' }} />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={handleCloseImage}>
+            Cerrar
           </CButton>
         </CModalFooter>
       </CModal>

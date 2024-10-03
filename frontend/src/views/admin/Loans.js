@@ -218,8 +218,8 @@ const Loans = () => {
             <CCardHeader>
               <div className="d-flex justify-content-between">
                 <span>Préstamos</span>
-                <CButton color="primary" size="sm" onClick={handleCreate}>
-                  <CIcon icon={cilPlus} /> Nuevo
+                <CButton className='custom-btn' size="sm" onClick={handleCreate}>
+                  Nuevo
                 </CButton>
               </div>
             </CCardHeader>
@@ -456,7 +456,7 @@ const Loans = () => {
           <CButton color="secondary" onClick={() => setCreateModalVisible(false)}>
             Cancelar
           </CButton>
-          <CButton color="primary" onClick={handleSave}>
+          <CButton className='custom-btn' onClick={handleSave}>
             Guardar
           </CButton>
         </CModalFooter>

@@ -215,7 +215,7 @@ const AdminUsers = () => {
           <CButton color="secondary" onClick={() => setEditModalVisible(false)}>
             Cancelar
           </CButton>
-          <CButton color="primary" onClick={handleSave}>
+          <CButton className='custom-btn' onClick={handleSave}>
             Guardar cambios
           </CButton>
         </CModalFooter>
