@@ -19,7 +19,8 @@ exports.registerUserByAdmin = (req, res) => {
             name,
             username,
             password: hashedPassword,
-            role
+            role,
+            isTemporaryPassword: 1 // Establecer isTemporaryPassword a 1
         };
 
         // Guardar usuario

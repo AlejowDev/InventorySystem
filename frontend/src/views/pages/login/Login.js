@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import './Login.css'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import './Login.css';
 import {
   CButton,
   CCard,
@@ -15,31 +15,33 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilLockLocked, cilUser } from '@coreui/icons';
 
 // Importa la imagen aquí
-import logo from '../../../assets/images/logo.png'
+import logo from '../../../assets/images/logo.png';
 
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const response = await axios.post('http://localhost:8081/api/auth/login', {
         username,
         password,
-      })
-      const { token, role } = response.data
+      });
 
-      // Guardar el token en el localStorage
-      localStorage.setItem('token', token)
-      localStorage.setItem('role', role)
+      const { token, role, isTemporaryPassword } = response.data; // Asegúrate de que isTemporaryPassword esté incluido en la respuesta
+
+      // Guardar el token y otros datos en el localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      localStorage.setItem('isTemporaryPassword', isTemporaryPassword); // Guardar isTemporaryPassword
 
       Swal.fire({
         icon: 'success',
@@ -47,33 +49,38 @@ const Login = () => {
         text: 'Inicio de sesión exitoso.',
         timer: 1500,
         timerProgressBar: true,
-      })
+      });
 
-      // Redirigir al dashboard según el rol
+      // Redirigir según la contraseña temporal
       setTimeout(() => {
-        switch (role) {
-          case 'admin':
-            navigate('/admin/Dashboard')
-            break
-          case 'moderator':
-            navigate('/moderator/Dashboard')
-            break
-          case 'student':
-            navigate('/student/Dashboard')
-            break
-          default:
-            navigate('/')
-            break
+        if (isTemporaryPassword) {
+          navigate('/change-password'); // Redirigir a ChangePassword.js
+        } else {
+          // Redirigir al dashboard según el rol
+          switch (role) {
+            case 'admin':
+              navigate('/admin/dashboard');
+              break;
+            case 'moderator':
+              navigate('/moderator/dashboard');
+              break;
+            case 'student':
+              navigate('/student/dashboard');
+              break;
+            default:
+              navigate('/');
+              break;
+          }
         }
-      }, 1500)
+      }, 1500);
     } catch (err) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Usuario o contraseña incorrectos. Por favor, verifica tus datos e intenta nuevamente.',
-      })
+      });
     }
-  }
+  };
 
   return (
     <div className="auth-background min-vh-100 d-flex flex-row align-items-center justify-content-center">
@@ -136,6 +143,7 @@ const Login = () => {
         </CRow>
       </CContainer>
     </div>
-  )
-}
-export default Login
+  );
+};
+
+export default Login;

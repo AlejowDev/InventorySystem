@@ -1,6 +1,7 @@
 // AdminNewUsers.js
 import React, { useState } from 'react'
 import axios from 'axios'
+import Swal from 'sweetalert2' // Importar SweetAlert
 import {
   CButton,
   CCard,
@@ -12,7 +13,6 @@ import {
   CFormLabel,
   CFormSelect,
   CRow,
-  CAlert,
 } from '@coreui/react'
 
 const AdminNewUsers = () => {
@@ -22,10 +22,8 @@ const AdminNewUsers = () => {
     username: '',
     password: '',
     role: '',
+    isTemporaryPassword: 1, // Valor por defecto para isTemporaryPassword
   })
-
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
   const handleChange = (e) => {
     setFormData({
@@ -36,8 +34,6 @@ const AdminNewUsers = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setError('')
-    setSuccess('')
 
     // Log para depurar
     console.log('Datos del formulario:', formData)
@@ -50,7 +46,11 @@ const AdminNewUsers = () => {
       !formData.password ||
       !formData.role
     ) {
-      setError('Todos los campos son obligatorios')
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Todos los campos son obligatorios',
+      })
       return
     }
 
@@ -58,17 +58,26 @@ const AdminNewUsers = () => {
     axios
       .post('http://localhost:8081/api/admin/register', formData) // Asegúrate de que esta URL es correcta
       .then((response) => {
-        setSuccess('Usuario creado exitosamente!')
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Usuario creado exitosamente!',
+        })
         setFormData({
           document: '',
           name: '',
           username: '',
           password: '',
           role: '',
+          isTemporaryPassword: 1, // Resetear el valor por defecto
         })
       })
       .catch((error) => {
-        setError('Hubo un error al crear el usuario')
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al crear el usuario',
+        })
         console.error('Error creando usuario:', error)
       })
   }
@@ -80,9 +89,6 @@ const AdminNewUsers = () => {
           <CCardHeader>Crear Nuevo Usuario</CCardHeader>
           <CCardBody>
             <CForm onSubmit={handleSubmit}>
-              {error && <CAlert color="danger">{error}</CAlert>}
-              {success && <CAlert color="success">{success}</CAlert>}
-
               <div className="mb-3">
                 <CFormLabel htmlFor="document">Documento</CFormLabel>
                 <CFormInput
@@ -92,6 +98,7 @@ const AdminNewUsers = () => {
                   value={formData.document}
                   onChange={handleChange}
                   placeholder="Ingresa el documento"
+                  maxLength={11}
                 />
               </div>
 
@@ -132,7 +139,7 @@ const AdminNewUsers = () => {
               </div>
 
               <div className="mb-3">
-                <CFormLabel htmlFor="password">Rol</CFormLabel>
+                <CFormLabel htmlFor="role">Rol</CFormLabel>
                 <CFormSelect id="role" name="role" value={formData.role} onChange={handleChange}>
                   <option value="" disabled>
                     Selecciona un rol
