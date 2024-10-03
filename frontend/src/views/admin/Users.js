@@ -126,7 +126,7 @@ const AdminUsers = () => {
             <CCardHeader>Usuarios</CCardHeader>
             <CCardBody>
               <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead className="text-nowrap">
+                <CTableHead className="text-nowrap text-center">
                   <CTableRow>
                     <CTableHeaderCell className="bg-body-tertiary">Documento</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Nombre</CTableHeaderCell>
@@ -135,7 +135,7 @@ const AdminUsers = () => {
                     <CTableHeaderCell className="bg-body-tertiary">Acciones</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
-                <CTableBody>
+                <CTableBody className="text-nowrap text-center">
                   {filteredUsers.map((user, index) => (
                     <CTableRow key={index}>
                       <CTableDataCell>{user.document}</CTableDataCell>
@@ -146,15 +146,14 @@ const AdminUsers = () => {
                       </CTableDataCell>
                       <CTableDataCell>
                         <CButton
-                          color="info"
+                          className="custom-btn-edit me-2"
                           size="sm"
-                          className="me-2"
                           onClick={() => handleEdit(user.document)}
                         >
                           <CIcon icon={cilPencil} />
                         </CButton>
                         <CButton
-                          color="danger"
+                          className="custom-btn-delete me-2"
                           size="sm"
                           onClick={() => handleDelete(user.document)}
                         >

@@ -187,7 +187,7 @@ const ToolsTable = () => {
             </CCardHeader>
             <CCardBody>
               <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead className="text-nowrap">
+                <CTableHead className="text-nowrap text-center">
                   <CTableRow>
                     <CTableHeaderCell className="bg-body-tertiary">Serial</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Nombre</CTableHeaderCell>
@@ -196,7 +196,7 @@ const ToolsTable = () => {
                     <CTableHeaderCell className="bg-body-tertiary">Acciones</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
-                <CTableBody>
+                <CTableBody className="text-nowrap text-center">
                   {tools.map((tool, index) => (
                     <CTableRow key={index}>
                       <CTableDataCell>{tool.serial}</CTableDataCell>
@@ -207,15 +207,15 @@ const ToolsTable = () => {
                           <img
                             src={`http://localhost:8081/${tool.imagen}`}
                             alt={tool.nombre}
-                            style={{ width: '60px', height: '60px' }}
+                            style={{ width: '40px', height: '40px' }}
                           />
                         )}
                       </CTableDataCell>
                       <CTableDataCell>
-                        <CButton color="info" size="sm" onClick={() => handleEdit(tool)}>
+                        <CButton className="custom-btn-edit me-2" size="sm" onClick={() => handleEdit(tool)}>
                           <CIcon icon={cilPencil} />
                         </CButton>{' '}
-                        <CButton color="danger" size="sm" onClick={() => handleDelete(tool.serial)}>
+                        <CButton className="custom-btn-delete me-2" size="sm" onClick={() => handleDelete(tool.serial)}>
                           <CIcon icon={cilTrash} />
                         </CButton>
                       </CTableDataCell>

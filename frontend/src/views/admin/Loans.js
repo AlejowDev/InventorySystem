@@ -21,9 +21,10 @@ import {
   CModalFooter,
   CForm,
   CFormSelect,
+  CFormInput,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPlus, cilTrash } from '@coreui/icons'
+import { cilPlus, cilTrash, cilPen } from '@coreui/icons'
 
 const Loans = () => {
   const [loans, setLoans] = useState([])
@@ -31,10 +32,12 @@ const Loans = () => {
   const [users, setUsers] = useState([])
   const [moderators, setModerators] = useState([])
   const [createModalVisible, setCreateModalVisible] = useState(false)
+  const [editModalVisible, setEditModalVisible] = useState(false)
   const [formData, setFormData] = useState({
-    receivingUserId: '',
-    deviceId: '',
-    moderatorId: '',
+    id: '',
+    receivingUser: '',
+    device: '',
+    moderator: '',
     loanDate: '',
     deliveryDate: '',
     approval: '',
@@ -101,9 +104,10 @@ const Loans = () => {
 
   const handleCreate = () => {
     setFormData({
-      receivingUserId: '',
-      deviceId: '',
-      moderatorId: '',
+      id: '',
+      receivingUser: '',
+      device: '',
+      moderator: '',
       loanDate: '',
       deliveryDate: '',
       approval: '',
@@ -112,15 +116,51 @@ const Loans = () => {
     setCreateModalVisible(true)
   }
 
+  const handleEdit = (loan) => {
+    setFormData({
+      id: loan.id,
+      receivingUser: loan.receivingUser,
+      device: loan.device,
+      moderator: loan.moderator,
+      loanDate: loan.loanDate,
+      deliveryDate: loan.deliveryDate,
+      approval: loan.approval,
+      state: loan.state,
+    })
+    setEditModalVisible(true)
+  }
+
+  const handleUpdate = () => {
+    const { id, approval, state } = formData
+
+    if (!approval || !state) {
+      Swal.fire('Error', 'Todos los campos son obligatorios.', 'error')
+      return
+    }
+
+    axios
+      .put(`http://localhost:8081/api/loans/${id}`, formData)
+      .then((response) => {
+        const updatedLoans = loans.map((loan) => (loan.id === id ? response.data : loan))
+        setLoans(updatedLoans)
+        setEditModalVisible(false)
+        Swal.fire('Éxito', 'Préstamo actualizado exitosamente.', 'success')
+        refreshLoans()
+      })
+      .catch((error) => {
+        console.error('Error updating loan:', error)
+        Swal.fire('Error', 'No se pudo actualizar el préstamo.', 'error')
+      })
+  }
+
   const handleSave = () => {
-    const { receivingUserId, deviceId, moderatorId, loanDate, deliveryDate, approval, state } =
-      formData
+    const { receivingUser, device, moderator, loanDate, deliveryDate, approval, state } = formData
 
     // Validar que los campos no estén vacíos
     if (
-      !receivingUserId ||
-      !deviceId ||
-      !moderatorId ||
+      !receivingUser ||
+      !device ||
+      !moderator ||
       !loanDate ||
       !deliveryDate ||
       !approval ||
@@ -185,32 +225,108 @@ const Loans = () => {
             </CCardHeader>
             <CCardBody>
               <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead className="text-nowrap">
+                <CTableHead className="text-nowrap text-center">
                   <CTableRow>
-                    <CTableHeaderCell>ID</CTableHeaderCell>
-                    <CTableHeaderCell>Dispositivo</CTableHeaderCell>
-                    <CTableHeaderCell>Usuario Receptor</CTableHeaderCell>
-                    <CTableHeaderCell>Moderador</CTableHeaderCell>
-                    <CTableHeaderCell>Fecha de Préstamo</CTableHeaderCell>
-                    <CTableHeaderCell>Fecha de Entrega</CTableHeaderCell>
-                    <CTableHeaderCell>Aprobación</CTableHeaderCell>
-                    <CTableHeaderCell>Estado</CTableHeaderCell>
-                    <CTableHeaderCell>Acciones</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">#</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Serial Dispositivo
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Nombre Dispositivo
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Documento Receptor
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Nombre Receptor
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Documento Moderador
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Nombre Moderador
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Fecha de Préstamo
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Fecha de Entrega
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Aprobación</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Estado</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Acciones</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
-                <CTableBody>
+                <CTableBody className="text-nowrap text-center">
                   {loans.map((loan) => (
                     <CTableRow key={loan.id}>
                       <CTableDataCell>{loan.id}</CTableDataCell>
                       <CTableDataCell>{loan.device}</CTableDataCell>
+                      <CTableDataCell>{loan.deviceName}</CTableDataCell>
                       <CTableDataCell>{loan.receivingUser}</CTableDataCell>
+                      <CTableDataCell>{loan.receivingUserName}</CTableDataCell>
                       <CTableDataCell>{loan.moderator}</CTableDataCell>
-                      <CTableDataCell>{loan.loanDate}</CTableDataCell>
-                      <CTableDataCell>{loan.deliveryDate}</CTableDataCell>
-                      <CTableDataCell>{loan.approval}</CTableDataCell>
-                      <CTableDataCell>{loan.state}</CTableDataCell>
+                      <CTableDataCell>{loan.moderatorName}</CTableDataCell>
                       <CTableDataCell>
-                        <CButton color="danger" size="sm" onClick={() => handleDelete(loan.id)}>
+                        {new Date(loan.loanDate).toLocaleString('es-CO', {
+                          hour: 'numeric',
+                          minute: 'numeric',
+                          second: 'numeric',
+                          hour12: true, // Para formato de 12 horas
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {new Date(loan.deliveryDate).toLocaleString('es-CO', {
+                          hour: 'numeric',
+                          minute: 'numeric',
+                          second: 'numeric',
+                          hour12: true, // Para formato de 12 horas
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}
+                      </CTableDataCell>
+                      <CTableDataCell
+                        style={{
+                          color:
+                            loan.approval === 'Aprobado'
+                              ? '#0cff00'
+                              : loan.approval === 'Pendiente'
+                                ? '#007cff'
+                                : '#ff0000',
+                        }}
+                      >
+                        {loan.approval}
+                      </CTableDataCell>
+                      <CTableDataCell
+                        style={{
+                          color:
+                            loan.state === 'Prestado'
+                              ? 'gray'
+                              : loan.state === 'Disponible'
+                                ? '#0cff00'
+                                : '#0cff00',
+                        }}
+                      >
+                        {loan.state}
+                      </CTableDataCell>
+
+                      <CTableDataCell>
+                        <CButton
+                          className="custom-btn-edit me-2"
+                          size="sm"
+                          onClick={() => handleEdit(loan)}
+                        >
+                          <CIcon icon={cilPen} />
+                        </CButton>
+                        <CButton
+                          className="custom-btn-delete"
+                          size="sm"
+                          onClick={() => handleDelete(loan.id)}
+                        >
                           <CIcon icon={cilTrash} />
                         </CButton>
                       </CTableDataCell>
@@ -232,8 +348,8 @@ const Loans = () => {
           <CForm>
             <CFormSelect
               label="Usuario Receptor"
-              name="receivingUserId"
-              value={formData.receivingUserId}
+              name="receivingUser"
+              value={formData.receivingUser}
               onChange={handleInputChange}
             >
               <option value="">Seleccionar usuario</option>
@@ -249,8 +365,8 @@ const Loans = () => {
             </CFormSelect>
             <CFormSelect
               label="Dispositivo"
-              name="deviceId"
-              value={formData.deviceId}
+              name="device"
+              value={formData.device}
               onChange={handleInputChange}
             >
               <option value="">Seleccionar dispositivo</option>
@@ -267,8 +383,8 @@ const Loans = () => {
 
             <CFormSelect
               label="Moderador"
-              name="moderatorId"
-              value={formData.moderatorId}
+              name="moderator"
+              value={formData.moderator}
               onChange={handleInputChange}
             >
               <option value="">Seleccionar moderador</option>
@@ -287,7 +403,7 @@ const Loans = () => {
                 Fecha de Préstamo
               </label>
               <input
-                type="date"
+                type="datetime-local"
                 id="loanDate"
                 name="loanDate"
                 value={formData.loanDate}
@@ -302,7 +418,7 @@ const Loans = () => {
                 Fecha de Entrega
               </label>
               <input
-                type="date"
+                type="datetime-local"
                 id="deliveryDate"
                 name="deliveryDate"
                 value={formData.deliveryDate}
@@ -330,6 +446,7 @@ const Loans = () => {
               onChange={handleInputChange}
             >
               <option value="">Seleccionar estado</option>
+              <option value="En inventario">En inventario</option>
               <option value="Prestado">Prestado</option>
               <option value="Disponible">Devuelto</option>
             </CFormSelect>
@@ -341,6 +458,46 @@ const Loans = () => {
           </CButton>
           <CButton color="primary" onClick={handleSave}>
             Guardar
+          </CButton>
+        </CModalFooter>
+      </CModal>
+      {/* Modal para editar préstamos */}
+      <CModal visible={editModalVisible} onClose={() => setEditModalVisible(false)}>
+        <CModalHeader>
+          <CModalTitle>Editar Préstamo</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CForm>
+            <CFormSelect
+              label="Aprobación"
+              name="approval"
+              value={formData.approval}
+              onChange={handleInputChange}
+            >
+              <option value="">Seleccionar aprobación</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="Aprobado">Aprobado</option>
+              <option value="Rechazado">Rechazado</option>
+            </CFormSelect>
+            <CFormSelect
+              label="Estado"
+              name="state"
+              value={formData.state}
+              onChange={handleInputChange}
+            >
+              <option value="">Seleccionar estado</option>
+              <option value="En inventario">En inventario</option>
+              <option value="Prestado">Prestado</option>
+              <option value="Disponible">Disponible</option>
+            </CFormSelect>
+          </CForm>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setEditModalVisible(false)}>
+            Cerrar
+          </CButton>
+          <CButton color="primary" onClick={handleUpdate}>
+            Actualizar
           </CButton>
         </CModalFooter>
       </CModal>
