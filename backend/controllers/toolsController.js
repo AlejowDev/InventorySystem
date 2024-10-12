@@ -15,8 +15,8 @@ const createTool = (req, res) => {
     const toolData = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
-        imagen: req.file ? req.file.path : null, // Asegúrate de obtener la ruta de la imagen
-        serial: req.body.serial, // Asegúrate de que estés enviando el serial
+        imagen: req.file ? req.file.path : null,
+        serial: req.body.serial,
     };
 
     Tool.create(toolData, (err, result) => {
@@ -26,6 +26,7 @@ const createTool = (req, res) => {
         res.json({ message: 'Herramienta creada exitosamente', tool: result });
     });
 };
+
 
 const updateTool = (req, res) => {
   const serial = req.params.serial;

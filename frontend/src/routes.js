@@ -16,6 +16,8 @@ const ModeratorUsers = React.lazy(() => import('./views/moderator/Users'))
 
 //Student pages
 const StudentDashboard = React.lazy(() => import('./views/student/Dashboard'))
+const StudentLoans = React.lazy(() => import('./views/student/Loans'))
+const StudentNewLoan = React.lazy(() => import('./views/student/NewLoan'))
 
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -81,6 +83,11 @@ const routes = [
 
   //Student
   { path: '/student/dashboard', name: 'Student Dashboard', element: StudentDashboard },
+  { path: '/student/loans', name: 'Student Loans', element: StudentLoans },
+  { path: '/student/newloan', name: 'Student NewLoan', element: StudentNewLoan },
+
+
+
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+
 import {
   CCard,
   CCardBody,
@@ -15,61 +16,17 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilUser, cilBolt, cilGlobeAlt } from '@coreui/icons'
+import backgroundImage from '../../assets/images/background-student.jpg'
 
 const StudentDashboard = () => {
-  const [users, setUsers] = useState([])
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:8081/api/users')
-      .then((response) => {
-        setUsers(response.data)
-      })
-      .catch((error) => {
-        console.error('Error fetching users:', error)
-      })
-  }, [])
-
-  const getRoleIcon = (role) => {
-    switch (role) {
-      case 'admin':
-        return cilGlobeAlt // Aquí podrías usar el ícono adecuado para Admin
-      case 'moderator':
-        return cilBolt // Aquí podrías usar el ícono adecuado para User
-      default:
-        return cilUser // Un ícono genérico si no se encuentra el rol
-    }
-  }
-
   return (
     <>
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Usuarios</CCardHeader>
-            <CCardBody>
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead className="text-nowrap">
-                  <CTableRow>
-                    <CTableHeaderCell className="bg-body-tertiary">Documento</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Nombre</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Username</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Rol</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {users.map((user, index) => (
-                    <CTableRow key={index}>
-                      <CTableDataCell>{user.document}</CTableDataCell>
-                      <CTableDataCell>{user.name}</CTableDataCell>
-                      <CTableDataCell>{user.username}</CTableDataCell>
-                      <CTableDataCell>
-                        <CIcon size="sm" icon={getRoleIcon(user.role)} /> {user.role}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
+            <CCardHeader className="text-center">¡Hola universitario, bienvenido a Inventory!</CCardHeader>
+            <CCardBody className="text-center">
+              <img src={backgroundImage} alt="Imagen de bienvenida" className="img-fluid" />
             </CCardBody>
           </CCard>
         </CCol>

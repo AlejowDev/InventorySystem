@@ -2,8 +2,9 @@ const db = require('../config/db');
 
 const Tool = {
     create: (toolData, callback) => {
-        const sql = 'INSERT INTO tools (serial, nombre, descripcion, imagen) VALUES (?, ?, ?, ?)';
-        db.query(sql, [toolData.serial, toolData.nombre, toolData.descripcion, toolData.imagen], callback);
+        const sql = 'INSERT INTO tools (serial, nombre, descripcion, imagen, estado) VALUES (?, ?, ?, ?, ?)';
+        // Agregamos "Disponible" como el valor por defecto para el estado
+        db.query(sql, [toolData.serial, toolData.nombre, toolData.descripcion, toolData.imagen, "Disponible"], callback);
     },
     findAll: (callback) => {
         const query = "SELECT * FROM tools";
