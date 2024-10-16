@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 12-10-2024 a las 17:08:02
+-- Tiempo de generación: 16-10-2024 a las 19:56:33
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -29,7 +29,6 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `loans` (
   `id` int NOT NULL,
-  `device` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `receivingUser` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `moderator` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `loanDate` datetime NOT NULL,
@@ -37,6 +36,13 @@ CREATE TABLE `loans` (
   `approval` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `state` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `loans`
+--
+
+INSERT INTO `loans` (`id`, `receivingUser`, `moderator`, `loanDate`, `deliveryDate`, `approval`, `state`) VALUES
+(46, '010010001', '0100101001', '2024-10-16 14:47:17', '2024-10-20 14:47:00', 'Pendiente', 'En inventario');
 
 -- --------------------------------------------------------
 
@@ -46,9 +52,18 @@ CREATE TABLE `loans` (
 
 CREATE TABLE `loan_devices` (
   `id` int NOT NULL,
-  `loan_id` int NOT NULL,
-  `device_serial` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `loan_id` int DEFAULT NULL,
+  `device_serial` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `device_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `loan_devices`
+--
+
+INSERT INTO `loan_devices` (`id`, `loan_id`, `device_serial`, `device_name`) VALUES
+(42, 46, '231232423', 'PC GAMER 50'),
+(43, 46, '12323312312', 'Notebook Azus');
 
 -- --------------------------------------------------------
 
@@ -71,6 +86,7 @@ CREATE TABLE `tools` (
 INSERT INTO `tools` (`serial`, `nombre`, `descripcion`, `imagen`, `estado`) VALUES
 ('12323312312', 'Notebook Azus', 'Azus i9 16gb RAM', 'uploads\\1728748350893.jpg', 'Disponible'),
 ('124234534', 'Thinkpad', 'ThinkPad ryzen 9', 'uploads\\1728748540076.jpg', 'Disponible'),
+('231232423', 'PC GAMER 50', 'FULL SATCK PC', 'uploads\\1729089056361.jpg', 'Disponible'),
 ('65643453', 'Notebook', 'PC Notebook i9', 'uploads\\1728748403810.jpg', 'Disponible');
 
 -- --------------------------------------------------------
@@ -93,9 +109,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`document`, `name`, `username`, `password`, `role`, `isTemporaryPassword`) VALUES
-('100023421', 'Ejemplo', 'Ejemplo', '$2b$10$pJIipFAe5aAB/eg09UvI6e3GP9n/9IKwe2cuRDHflKtCrDaln3jIO', 'student', 0),
-('1022932004', 'Alejandro', 'Admin', '$2b$10$yst7DGpexS.dQ8jkcnnYReMGRLroUwvLjb8Jy/A8f7cdPLtYYL/XS', 'admin', 0),
-('122034231', 'Ejemplo', 'Ejemplo2', '$2b$10$W97P/SxIqPIiRXyneo0Ku.6gxfqtnR2LQ1MxZVYEWXBstiJhMgSGy', 'moderator', 0);
+('010010001', 'Estudiante', 'Estudiante', '$2b$10$HirfvmkpOQhMHSULPe7DG.roECl9sJM2AKEwrUAGzMWSrbAx4bua.', 'student', 0),
+('0100101001', 'Moderador', 'Moderador', '$2b$10$SjyPWODW6wxAmSC1aFBZn.D2.MJD3EEWJOZYSVuvf3MPhrIQ6V/XC', 'moderator', 0),
+('1022932004', 'Alejandro', 'Admin', '$2b$10$yst7DGpexS.dQ8jkcnnYReMGRLroUwvLjb8Jy/A8f7cdPLtYYL/XS', 'admin', 0);
 
 --
 -- Índices para tablas volcadas
@@ -112,8 +128,7 @@ ALTER TABLE `loans`
 --
 ALTER TABLE `loan_devices`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `loan_id` (`loan_id`),
-  ADD KEY `device_serial` (`device_serial`);
+  ADD KEY `loan_id` (`loan_id`);
 
 --
 -- Indices de la tabla `tools`
@@ -135,13 +150,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `loans`
 --
 ALTER TABLE `loans`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `loan_devices`
 --
 ALTER TABLE `loan_devices`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- Restricciones para tablas volcadas
@@ -151,8 +166,7 @@ ALTER TABLE `loan_devices`
 -- Filtros para la tabla `loan_devices`
 --
 ALTER TABLE `loan_devices`
-  ADD CONSTRAINT `loan_devices_ibfk_1` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`),
-  ADD CONSTRAINT `loan_devices_ibfk_2` FOREIGN KEY (`device_serial`) REFERENCES `tools` (`serial`);
+  ADD CONSTRAINT `loan_devices_ibfk_1` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
