@@ -1,8 +1,21 @@
 // src/navigation/studentNav.js
 import CIcon from '@coreui/icons-react';
 import { cilSpeedometer, cilBook, cilRoom, cilCart } from '@coreui/icons'; // Usa cilUser si cilLogout no está disponible
-import { CNavItem, CNavTitle } from '@coreui/react';
+import { CNavItem, CNavTitle, CDropdownItem } from '@coreui/react';
 import { clearAuth } from '../services/auth';
+
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('isTemporaryPassword');
+  localStorage.removeItem('document');
+  
+  Swal.fire({
+    icon: 'success',
+    title: 'Sesión cerrada',
+    text: 'Has cerrado sesión exitosamente.',
+  });
+};
 
 const studentNav = (navigate) => [
   {
@@ -28,15 +41,12 @@ const studentNav = (navigate) => [
     icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
   },
   {
-    component: CNavItem,
+    component: CDropdownItem,
     name: 'Cerrar sesión',
-    href: '#',
-    onClick: () => {
-      clearAuth();
-      navigate('/login');
-    },
-    icon: <CIcon icon={cilRoom} className="me-2" />, // Cambiado a cilUser
-  },
+    href: '/login',
+    onClick: handleLogout, // Llama a handleLogout al hacer clic
+    icon: <CIcon icon={cilRoom} className="me-2" />,
+  }
 ];
 
 export default studentNav;

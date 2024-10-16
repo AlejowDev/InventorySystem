@@ -36,12 +36,13 @@ const Login = () => {
         password,
       });
 
-      const { token, role, isTemporaryPassword } = response.data; // Asegúrate de que isTemporaryPassword esté incluido en la respuesta
+      const { token, role, isTemporaryPassword, document } = response.data; // Asegúrate de que 'document' esté incluido en la respuesta
 
       // Guardar el token y otros datos en el localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       localStorage.setItem('isTemporaryPassword', isTemporaryPassword); // Guardar isTemporaryPassword
+      localStorage.setItem('document', document); // Guardar isTemporaryPassword
 
       Swal.fire({
         icon: 'success',

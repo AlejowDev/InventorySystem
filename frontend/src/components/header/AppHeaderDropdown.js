@@ -42,11 +42,16 @@ const AppHeaderDropdown = () => {
   }
 
   const handleLogout = () => {
-    // Limpiar datos de autenticación (token, rol, etc.)
-    clearAuth();
-
-    // Redirigir al usuario a la página de inicio de sesión
-    navigate('/login');
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('isTemporaryPassword');
+    localStorage.removeItem('document');
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Sesión cerrada',
+      text: 'Has cerrado sesión exitosamente.',
+    });
   };
 
   return (
@@ -56,7 +61,7 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Cuenta</CDropdownHeader>
-        <CDropdownItem href="#" onClick={handleLogout}>
+        <CDropdownItem href="/login" onClick={handleLogout}>
           <CIcon icon={cilRoom} className="me-2" />
           Cerrar sesión
         </CDropdownItem>

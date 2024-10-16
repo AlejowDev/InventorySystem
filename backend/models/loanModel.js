@@ -16,23 +16,56 @@ const Loan = {
         loanData.state,
       ],
       (err, result) => {
-        if (err) return callback(err);
+        if (err) {
+          console.error("Error inserting into loans:", err);
+          return callback(err);
+        }
 
         const loanId = result.insertId; // Obtener el ID del préstamo recién creado
 
-        // Ahora insertamos los dispositivos en la tabla loan_devices
-        const devices = loanData.devices; // Asumimos que es un array de seriales
-        const sqlDevices =
-          "INSERT INTO loan_devices (loan_id, device_serial) VALUES ?";
-        const values = devices.map((device) => [loanId, device]);
+        const devices = loanData.devices || []; // Array de seriales de dispositivos
+        if (devices.length > 0) {
+          // Construimos una consulta para obtener los nombres de los dispositivos
+          const sqlGetDeviceNames = `
+            SELECT serial, nombre FROM tools WHERE serial IN (?)
+          `;
 
-        db.query(sqlDevices, [values], (err, result) => {
-          if (err) return callback(err);
+          db.query(sqlGetDeviceNames, [devices], (err, deviceResults) => {
+            if (err) {
+              console.error("Error fetching device names:", err);
+              return callback(err);
+            }
+
+            // Creamos un mapa de dispositivos para facilitar la búsqueda
+            const deviceMap = {};
+            deviceResults.forEach(device => {
+              deviceMap[device.serial] = device.nombre;
+            });
+
+            // Preparamos los valores para la inserción en loan_devices
+            const sqlDevices =
+              "INSERT INTO loan_devices (loan_id, device_serial, device_name) VALUES ?";
+            const values = devices.map((deviceSerial) => [
+              loanId,
+              deviceSerial,
+              deviceMap[deviceSerial] || null // Asignamos el nombre del dispositivo o null si no se encontró
+            ]);
+
+            db.query(sqlDevices, [values], (err) => {
+              if (err) {
+                console.error("Error inserting into loan_devices:", err);
+                return callback(err);
+              }
+              callback(null, result);
+            });
+          });
+        } else {
           callback(null, result);
-        });
+        }
       }
     );
   },
+
   findAll: (callback) => {
     const query = `
       SELECT 
@@ -41,24 +74,32 @@ const Loan = {
         loans.deliveryDate, 
         loans.approval, 
         loans.state,
-        GROUP_CONCAT(loan_devices.device_serial) AS devices, -- Aquí obtenemos los dispositivos asociados
+        GROUP_CONCAT(loan_devices.device_serial) AS devices,
+        GROUP_CONCAT(loan_devices.device_name) AS deviceNames, -- Usar device_name
         receivingUser.document AS receivingUser, 
         receivingUser.name AS receivingUserName,
         moderatorUser.document AS moderator, 
         moderatorUser.name AS moderatorName
       FROM loans
-      JOIN loan_devices ON loans.id = loan_devices.loan_id -- Relacionamos la tabla de dispositivos
+      LEFT JOIN loan_devices ON loans.id = loan_devices.loan_id
       JOIN users AS receivingUser ON loans.receivingUser = receivingUser.document
       JOIN users AS moderatorUser ON loans.moderator = moderatorUser.document
       GROUP BY loans.id;
     `;
-    db.query(query, callback);
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Error fetching loans:", err);
+        return callback(err);
+      }
+      callback(null, results);
+    });
   },
 
   delete: (id, callback) => {
     const sql = "DELETE FROM loans WHERE id = ?";
     db.query(sql, [id], callback);
   },
+
   update: (id, loanData, callback) => {
     // Método para actualizar un préstamo
     const sql = "UPDATE loans SET approval = ?, state = ? WHERE id = ?";

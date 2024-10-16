@@ -64,6 +64,7 @@ exports.login = (req, res) => {
       res.status(200).json({
         token,
         role: user.role,
+        document: user.document, // Agregar el documento a la respuesta
         isTemporaryPassword: user.isTemporaryPassword, // Asegúrate de que este campo esté presente en tu modelo
       });
     });

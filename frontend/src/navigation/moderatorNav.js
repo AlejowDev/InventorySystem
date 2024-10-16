@@ -1,8 +1,21 @@
 // src/navigation/moderatorNav.js
 import CIcon from '@coreui/icons-react';
 import { cilSpeedometer, cilList, cilPuzzle, cilRoom } from '@coreui/icons';
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react';
+import { CNavGroup, CNavItem, CNavTitle, CDropdownItem } from '@coreui/react';
 import { clearAuth } from '../services/auth';
+
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('isTemporaryPassword');
+  localStorage.removeItem('document');
+  
+  Swal.fire({
+    icon: 'success',
+    title: 'Sesión cerrada',
+    text: 'Has cerrado sesión exitosamente.',
+  });
+};
 
 const moderatorNav = (navigate) => [
   {
@@ -45,15 +58,12 @@ const moderatorNav = (navigate) => [
     ],
   },
   {
-    component: CNavItem,
+    component: CDropdownItem,
     name: 'Cerrar sesión',
-    href: '#',
-    onClick: () => {
-      clearAuth();
-      navigate('/login');
-    },
+    href: '/login',
+    onClick: handleLogout, // Llama a handleLogout al hacer clic
     icon: <CIcon icon={cilRoom} className="me-2" />,
-  },
+  }
 ];
 
 export default moderatorNav;

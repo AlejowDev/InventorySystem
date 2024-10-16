@@ -1,60 +1,88 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react';
 
 const NewLoan = () => {
-  const [devices, setDevices] = useState([])
-  const [cart, setCart] = useState([])
-  const [error, setError] = useState(null) // Agregar un estado para el error
+  const [devices, setDevices] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [error, setError] = useState(null);
+  const [deliveryDate, setDeliveryDate] = useState('');
 
   useEffect(() => {
-    fetchDevices()
-  }, [])
+    fetchDevices();
+  }, []);
 
   const fetchDevices = () => {
     axios
       .get('http://localhost:8081/api/tools')
       .then((response) => {
-        setDevices(response.data)
+        setDevices(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching devices:', error)
-        setError('Error al cargar los dispositivos.') // Manejo de error
-      })
-  }
+        console.error('Error fetching devices:', error);
+        setError('Error al cargar los dispositivos.');
+      });
+  };
 
   const handleAddToCart = (device) => {
-    setCart((prevCart) => [...prevCart, device])
-    Swal.fire('Éxito', `${device.nombre} ha sido añadido al carrito.`, 'success')
-  }
+    setCart((prevCart) => [...prevCart, device]);
+    Swal.fire('Éxito', `${device.nombre} ha sido añadido al carrito.`, 'success');
+  };
 
   const handleRequestLoan = () => {
-    // Aquí puedes definir los datos que necesitas enviar para el préstamo
-    const loanData = {
-      receivingUser: 'usuario_documento', // Reemplaza con el documento del usuario que recibe el préstamo
-      moderator: 'moderador_documento', // Reemplaza con el documento del moderador
-      loanDate: new Date().toISOString().split('T')[0], // Fecha actual
-      deliveryDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split('T')[0], // Fecha de entrega (por ejemplo, en 7 días)
-      approval: false, // Estado inicial del préstamo
-      state: 'Pendiente', // Estado del préstamo
-      devices: cart.map((device) => device.serial), // Array de seriales de los dispositivos en el carrito
+    if (!deliveryDate) {
+      Swal.fire(
+        'Advertencia',
+        'Por favor, completa la fecha de entrega antes de solicitar el préstamo.',
+        'warning',
+      );
+      return;
     }
 
-    // Realiza la petición POST a la API
+    const formatDateToDatabase = (date) => {
+      const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      };
+      return new Date(date).toLocaleString('sv-SE', options).replace(' ', 'T');
+    };  
+
+    // Obtener el documento desde localStorage
+    const receivingUser = localStorage.getItem('document'); // Cambia esto si usas un formato diferente
+
+    const loanData = {
+      receivingUser: receivingUser, 
+      moderator: '0100101001',
+      loanDate: formatDateToDatabase(new Date()),
+      deliveryDate:
+        deliveryDate ||
+        formatDateToDatabase(new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)),
+      approval: 'Pendiente',
+      state: 'En inventario',
+      devices: cart.map((device) => device.serial),
+    };
+
+    console.log('Loan data before request:', loanData);
+
     axios
       .post('http://localhost:8081/api/loans', loanData)
       .then((response) => {
-        Swal.fire('Éxito', 'Préstamo solicitado con éxito.', 'success')
-        setCart([]) // Limpiar el carrito después de solicitar el préstamo
+        console.log('Response from server:', response);
+        Swal.fire('Éxito', 'Préstamo solicitado con éxito.', 'success');
+        setCart([]);
+        setDeliveryDate('');
       })
       .catch((error) => {
-        console.error('Error requesting loan:', error)
-        Swal.fire('Error', 'Hubo un problema al solicitar el préstamo.', 'error')
-      })
-  }
+        console.error('Error requesting loan:', error);
+        Swal.fire('Error', 'Hubo un problema al solicitar el préstamo.', 'error');
+      });
+  };
 
   return (
     <>
@@ -66,7 +94,6 @@ const NewLoan = () => {
             </div>
           </CCardHeader>
           <CCardBody>
-            {/* Mostrar carrito */}
             <CRow className="mt-4 mb-4">
               <CCol xs>
                 <CCard>
@@ -96,12 +123,25 @@ const NewLoan = () => {
                             ))}
                           </tbody>
                         </table>
+                        <CRow className="mb-4">
+                          <CCol xs>
+                            <label htmlFor="deliveryDate">Fecha de Entrega:</label>
+                            <input
+                              required
+                              type="datetime-local"
+                              id="deliveryDate"
+                              className="form-control"
+                              value={deliveryDate}
+                              onChange={(e) => setDeliveryDate(e.target.value)}
+                            />
+                          </CCol>
+                        </CRow>
                         <CRow className="mt-4">
                           <CCol xs="auto">
                             <CButton
                               color="primary"
                               onClick={handleRequestLoan}
-                              disabled={cart.length === 0} // Deshabilitar si el carrito está vacío
+                              disabled={cart.length === 0}
                             >
                               Pedir Préstamo
                             </CButton>
@@ -114,7 +154,6 @@ const NewLoan = () => {
               </CCol>
             </CRow>
 
-            {/* Mostrar mensaje de error si hay un problema */}
             {error && (
               <CRow className="mb-4">
                 <CCol xs>
@@ -129,18 +168,17 @@ const NewLoan = () => {
                   <CCard>
                     <CCardHeader className="text-center">{device.nombre}</CCardHeader>
                     <CCardBody className="text-center">
-                      {device.imagen ? ( // Comprobar si la imagen existe
+                      {device.imagen ? (
                         <img
-                          src={`http://localhost:8081/${device.imagen}`} // Ajusta la URL de la imagen aquí
+                          src={`http://localhost:8081/${device.imagen}`}
                           alt={device.nombre}
                           style={{ width: '140px', height: '130px' }}
                         />
                       ) : (
-                        <div>No hay imagen disponible</div> // Mensaje alternativo si no hay imagen
+                        <div>No hay imagen disponible</div>
                       )}
                       <p className="mt-2">{device.descripcion || 'Descripción no disponible'}</p>
 
-                      {/* Comprobar el estado del dispositivo y condicionar el botón */}
                       {device.estado === 'Ocupado' ? (
                         <CButton color="secondary" disabled>
                           Ocupado
@@ -159,7 +197,7 @@ const NewLoan = () => {
         </CCard>
       </CCol>
     </>
-  )
-}
+  );
+};
 
-export default NewLoan
+export default NewLoan;

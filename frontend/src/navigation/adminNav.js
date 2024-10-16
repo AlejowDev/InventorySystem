@@ -5,6 +5,19 @@ import { CNavGroup, CNavItem, CNavTitle, CDropdownItem } from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
 import { clearAuth } from '../services/auth'; // Ajusta la importación según tu estructura de proyecto
 
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('isTemporaryPassword');
+  localStorage.removeItem('document');
+  
+  Swal.fire({
+    icon: 'success',
+    title: 'Sesión cerrada',
+    text: 'Has cerrado sesión exitosamente.',
+  });
+};
+
 // Define una función que devuelve el arreglo de navegación con el botón de cerrar sesión
 const adminNav = (navigate) => [
   {
@@ -56,11 +69,8 @@ const adminNav = (navigate) => [
   {
     component: CDropdownItem,
     name: 'Cerrar sesión',
-    href: '#',
-    onClick: () => {
-      clearAuth();
-      navigate('/login');
-    },
+    href: '/login',
+    onClick: handleLogout, // Llama a handleLogout al hacer clic
     icon: <CIcon icon={cilRoom} className="me-2" />,
   }
 ];
