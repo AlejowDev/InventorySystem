@@ -19,6 +19,9 @@ const AdminNewUsers = () => {
   const [formData, setFormData] = useState({
     document: '',
     name: '',
+    email: '',
+    phone: '',
+    studentNumber: '',
     username: '',
     password: '',
     role: '',
@@ -42,6 +45,9 @@ const AdminNewUsers = () => {
     if (
       !formData.document ||
       !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.studentNumber ||
       !formData.username ||
       !formData.password ||
       !formData.role
@@ -66,6 +72,9 @@ const AdminNewUsers = () => {
         setFormData({
           document: '',
           name: '',
+          email: '',
+          phone: '',
+          studentNumber: '',
           username: '',
           password: '',
           role: '',
@@ -111,6 +120,45 @@ const AdminNewUsers = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Ingresa el nombre"
+                />
+              </div>
+
+              <div className="mb-3">
+                <CFormLabel htmlFor="email">E-mail</CFormLabel>
+                <CFormInput
+                  type="text"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Ingresa el correo electronico"
+                  maxLength={100}
+                />
+              </div>
+
+              <div className="mb-3">
+                <CFormLabel htmlFor="phone">Celular</CFormLabel>
+                <CFormInput
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Ingresa el numero celular"
+                  maxLength={11}
+                />
+              </div>
+
+              <div className="mb-3">
+                <CFormLabel htmlFor="studentNumber">Codigo estudiantil</CFormLabel>
+                <CFormInput
+                  type="text"
+                  id="studentNumber"
+                  name="studentNumber"
+                  value={formData.studentNumber}
+                  onChange={handleChange}
+                  placeholder="Ingresa el codigo estudiantil"
+                  maxLength={100}
                 />
               </div>
 

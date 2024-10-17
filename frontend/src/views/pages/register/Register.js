@@ -16,13 +16,16 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilPhone, cilFolder, cilCode } from '@coreui/icons'
 // Importa la imagen aquí
 import logo from '../../../assets/images/logo.png'
 
 const Register = () => {
   const [document, setDocument] = useState('')
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [studentNumber, setStudentNumber] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -44,6 +47,9 @@ const Register = () => {
       const response = await axios.post('http://localhost:8081/api/auth/register', {
         document,
         name,
+        email,
+        phone,
+        studentNumber,
         username,
         password,
       })
@@ -70,9 +76,9 @@ const Register = () => {
 
   return (
     <div className="auth-background min-vh-100 d-flex flex-row align-items-center">
-      <CContainer>
+      <CContainer className='container'>
         <CRow className="justify-content-center">
-          <CCol md={6} lg={5} xl={5}>
+          <CCol xs={12} md={7} lg={7} xl={5}>
             <CCard className="bg-dark mx-4">
               <CCardBody className="p-4">
                 <CForm onSubmit={handleSubmit}>
@@ -85,6 +91,7 @@ const Register = () => {
                       placeholder="Documento"
                       value={document}
                       onChange={(e) => setDocument(e.target.value)}
+                      maxLength={11}
                       required
                     />
                   </CInputGroup>
@@ -98,6 +105,46 @@ const Register = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
+                      maxLength={100}
+                    />
+                  </CInputGroup>
+
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilFolder} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="Correo electronico"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      maxLength={100}
+                    />
+                  </CInputGroup>
+
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilPhone} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="Numero celular"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      maxLength={11}
+                    />
+                  </CInputGroup>
+
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilCode} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="Codigo estudiantil"
+                      value={studentNumber}
+                      onChange={(e) => setStudentNumber(e.target.value)}
+                      required
+                      maxLength={100}
                     />
                   </CInputGroup>
 
@@ -108,6 +155,7 @@ const Register = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
+                      maxLength={30}
                     />
                   </CInputGroup>
 

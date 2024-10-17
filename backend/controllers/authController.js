@@ -10,6 +10,9 @@ exports.register = (req, res) => {
   const {
     document,
     name,
+    email,
+    phone,
+    studentNumber,
     username,
     password,
     isTemporaryPassword = 0,
@@ -23,6 +26,9 @@ exports.register = (req, res) => {
     const newUser = {
       document,
       name,
+      email,
+      phone,
+      studentNumber,
       username,
       password: hashedPassword,
       role,

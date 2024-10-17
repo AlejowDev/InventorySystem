@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react'
 
 const NewLoan = () => {
-  const [devices, setDevices] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [error, setError] = useState(null);
-  const [deliveryDate, setDeliveryDate] = useState('');
+  const [devices, setDevices] = useState([])
+  const [cart, setCart] = useState([])
+  const [error, setError] = useState(null)
+  const [deliveryDate, setDeliveryDate] = useState('')
 
   useEffect(() => {
-    fetchDevices();
-  }, []);
+    fetchDevices()
+  }, [])
 
   const fetchDevices = () => {
     axios
       .get('http://localhost:8081/api/tools')
       .then((response) => {
-        setDevices(response.data);
+        setDevices(response.data)
       })
       .catch((error) => {
-        console.error('Error fetching devices:', error);
-        setError('Error al cargar los dispositivos.');
-      });
-  };
+        console.error('Error fetching devices:', error)
+        setError('Error al cargar los dispositivos.')
+      })
+  }
 
   const handleAddToCart = (device) => {
-    setCart((prevCart) => [...prevCart, device]);
-    Swal.fire('Éxito', `${device.nombre} ha sido añadido al carrito.`, 'success');
-  };
+    setCart((prevCart) => [...prevCart, device])
+    Swal.fire('Éxito', `${device.nombre} ha sido añadido al carrito.`, 'success')
+  }
 
   const handleRequestLoan = () => {
     if (!deliveryDate) {
@@ -36,8 +36,8 @@ const NewLoan = () => {
         'Advertencia',
         'Por favor, completa la fecha de entrega antes de solicitar el préstamo.',
         'warning',
-      );
-      return;
+      )
+      return
     }
 
     const formatDateToDatabase = (date) => {
@@ -49,40 +49,38 @@ const NewLoan = () => {
         minute: '2-digit',
         second: '2-digit',
         hour12: false,
-      };
-      return new Date(date).toLocaleString('sv-SE', options).replace(' ', 'T');
-    };  
+      }
+      return new Date(date).toLocaleString('sv-SE', options).replace(' ', 'T')
+    }
 
     // Obtener el documento desde localStorage
-    const receivingUser = localStorage.getItem('document'); // Cambia esto si usas un formato diferente
+    const receivingUser = localStorage.getItem('document') // Cambia esto si usas un formato diferente
 
     const loanData = {
-      receivingUser: receivingUser, 
+      receivingUser: receivingUser,
       moderator: '0100101001',
       loanDate: formatDateToDatabase(new Date()),
-      deliveryDate:
-        deliveryDate ||
-        formatDateToDatabase(new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)),
+      deliveryDate: deliveryDate,
       approval: 'Pendiente',
-      state: 'En inventario',
+      state: 'Disponible',
       devices: cart.map((device) => device.serial),
-    };
+    }
 
-    console.log('Loan data before request:', loanData);
+    console.log('Loan data before request:', loanData)
 
     axios
       .post('http://localhost:8081/api/loans', loanData)
       .then((response) => {
-        console.log('Response from server:', response);
-        Swal.fire('Éxito', 'Préstamo solicitado con éxito.', 'success');
-        setCart([]);
-        setDeliveryDate('');
+        console.log('Response from server:', response)
+        Swal.fire('Éxito', 'Préstamo solicitado con éxito.', 'success')
+        setCart([])
+        setDeliveryDate('')
       })
       .catch((error) => {
-        console.error('Error requesting loan:', error);
-        Swal.fire('Error', 'Hubo un problema al solicitar el préstamo.', 'error');
-      });
-  };
+        console.error('Error requesting loan:', error)
+        Swal.fire('Error', 'Hubo un problema al solicitar el préstamo.', 'error')
+      })
+  }
 
   return (
     <>
@@ -197,7 +195,7 @@ const NewLoan = () => {
         </CCard>
       </CCol>
     </>
-  );
-};
+  )
+}
 
-export default NewLoan;
+export default NewLoan

@@ -17,6 +17,7 @@ import {
 
 const StudentLoans = () => {
   const [loans, setLoans] = useState([])
+  const userDocument = localStorage.getItem('document');
 
   useEffect(() => {
     refreshLoans()
@@ -26,12 +27,17 @@ const StudentLoans = () => {
     axios
       .get('http://localhost:8081/api/loans')
       .then((response) => {
-        setLoans(response.data)
+        const filteredLoans = response.data
+          .filter((loan) => loan.receivingUser === userDocument)
+          .sort((a, b) => new Date(b.loanDate) - new Date(a.loanDate)); // Ordenar de más reciente a más antiguo
+  
+        setLoans(filteredLoans);
       })
       .catch((error) => {
-        console.error('Error fetching loans:', error)
-      })
-  }
+        console.error('Error fetching loans:', error);
+      });
+  };
+  
 
   return (
     <CRow>
@@ -124,9 +130,9 @@ const StudentLoans = () => {
                       style={{
                         borderColor: 'white',
                         color:
-                          loan.approval === 'Aprobado'
+                          loan.approval === 'Aprobado' || loan.approval === 'En uso'
                             ? '#0cff00'
-                            : loan.approval === 'Pendiente'
+                            : loan.approval === 'Pendiente' || loan.approval === 'Finalizado'
                               ? '#007cff'
                               : '#ff0000',
                       }}
@@ -136,7 +142,7 @@ const StudentLoans = () => {
                     <CTableDataCell
                       style={{
                         borderColor: 'white',
-                        color: loan.state === 'Prestado' ? 'gray' : '#0cff00',
+                        color: loan.state === 'Ocupado' ? 'gray' : '#0cff00',
                       }}
                     >
                       {loan.state}

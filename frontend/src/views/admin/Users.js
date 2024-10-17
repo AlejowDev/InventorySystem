@@ -35,6 +35,9 @@ const AdminUsers = () => {
   const [formData, setFormData] = useState({
     document: '',
     name: '',
+    email: '',
+    phone: '',
+    studentNumber: '',
     username: '',
     role: '',
   });
@@ -130,6 +133,9 @@ const AdminUsers = () => {
                   <CTableRow>
                     <CTableHeaderCell className="bg-body-tertiary">Documento</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Nombre</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Email</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Celular</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Codigo estudiantil</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Username</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Rol</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Acciones</CTableHeaderCell>
@@ -140,6 +146,9 @@ const AdminUsers = () => {
                     <CTableRow key={index}>
                       <CTableDataCell>{user.document}</CTableDataCell>
                       <CTableDataCell>{user.name}</CTableDataCell>
+                      <CTableDataCell>{user.email}</CTableDataCell>
+                      <CTableDataCell>{user.phone}</CTableDataCell>
+                      <CTableDataCell>{user.studentNumber}</CTableDataCell>
                       <CTableDataCell>{user.username}</CTableDataCell>
                       <CTableDataCell>
                         <CIcon size="sm" icon={getRoleIcon(user.role)} /> {user.role}
@@ -187,6 +196,24 @@ const AdminUsers = () => {
               label="Nombre"
               name="name"
               value={formData.name}
+              onChange={handleInputChange}
+            />
+            <CFormInput
+              label="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+            <CFormInput
+              label="Numero Celular"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+            />
+            <CFormInput
+              label="Codigo estudiantil"
+              name="studentNumber"
+              value={formData.studentNumber}
               onChange={handleInputChange}
             />
             <CFormInput

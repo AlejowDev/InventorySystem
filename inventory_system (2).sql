@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 16-10-2024 a las 19:56:33
+-- Tiempo de generación: 17-10-2024 a las 22:32:53
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -42,7 +42,9 @@ CREATE TABLE `loans` (
 --
 
 INSERT INTO `loans` (`id`, `receivingUser`, `moderator`, `loanDate`, `deliveryDate`, `approval`, `state`) VALUES
-(46, '010010001', '0100101001', '2024-10-16 14:47:17', '2024-10-20 14:47:00', 'Pendiente', 'En inventario');
+(50, '100232447', '0100101001', '2024-10-17 14:24:53', '2024-10-20 14:24:00', 'En uso', 'Ocupado'),
+(51, '312312331', '0100101001', '2024-10-17 14:41:13', '2024-10-20 14:41:00', 'Finalizado ', 'Disponible'),
+(52, '100232447', '0100101001', '2024-10-17 15:07:18', '2024-10-19 15:07:00', 'Pendiente', 'Disponible');
 
 -- --------------------------------------------------------
 
@@ -62,8 +64,10 @@ CREATE TABLE `loan_devices` (
 --
 
 INSERT INTO `loan_devices` (`id`, `loan_id`, `device_serial`, `device_name`) VALUES
-(42, 46, '231232423', 'PC GAMER 50'),
-(43, 46, '12323312312', 'Notebook Azus');
+(48, 50, '231232423', 'PC GAMER 50'),
+(49, 50, '65643453', 'Notebook'),
+(50, 51, '12323312312', 'Notebook Azus'),
+(51, 52, '12323312312', 'Notebook Azus');
 
 -- --------------------------------------------------------
 
@@ -86,8 +90,8 @@ CREATE TABLE `tools` (
 INSERT INTO `tools` (`serial`, `nombre`, `descripcion`, `imagen`, `estado`) VALUES
 ('12323312312', 'Notebook Azus', 'Azus i9 16gb RAM', 'uploads\\1728748350893.jpg', 'Disponible'),
 ('124234534', 'Thinkpad', 'ThinkPad ryzen 9', 'uploads\\1728748540076.jpg', 'Disponible'),
-('231232423', 'PC GAMER 50', 'FULL SATCK PC', 'uploads\\1729089056361.jpg', 'Disponible'),
-('65643453', 'Notebook', 'PC Notebook i9', 'uploads\\1728748403810.jpg', 'Disponible');
+('231232423', 'PC GAMER 50', 'FULL SATCK PC', 'uploads\\1729089056361.jpg', 'Ocupado'),
+('65643453', 'Notebook', 'PC Notebook i9', 'uploads\\1728748403810.jpg', 'Ocupado');
 
 -- --------------------------------------------------------
 
@@ -98,6 +102,9 @@ INSERT INTO `tools` (`serial`, `nombre`, `descripcion`, `imagen`, `estado`) VALU
 CREATE TABLE `users` (
   `document` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
   `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `studentNumber` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `username` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `password` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `role` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
@@ -108,10 +115,11 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`document`, `name`, `username`, `password`, `role`, `isTemporaryPassword`) VALUES
-('010010001', 'Estudiante', 'Estudiante', '$2b$10$HirfvmkpOQhMHSULPe7DG.roECl9sJM2AKEwrUAGzMWSrbAx4bua.', 'student', 0),
-('0100101001', 'Moderador', 'Moderador', '$2b$10$SjyPWODW6wxAmSC1aFBZn.D2.MJD3EEWJOZYSVuvf3MPhrIQ6V/XC', 'moderator', 0),
-('1022932004', 'Alejandro', 'Admin', '$2b$10$yst7DGpexS.dQ8jkcnnYReMGRLroUwvLjb8Jy/A8f7cdPLtYYL/XS', 'admin', 0);
+INSERT INTO `users` (`document`, `name`, `email`, `phone`, `studentNumber`, `username`, `password`, `role`, `isTemporaryPassword`) VALUES
+('0100101001', 'Moderador', 'moderador@gmail.com', '32312312', '000000000', 'Moderador', '$2b$10$SjyPWODW6wxAmSC1aFBZn.D2.MJD3EEWJOZYSVuvf3MPhrIQ6V/XC', 'moderator', 0),
+('100232447', 'Alexis', 'estudiante@gmail.com', '331426634', '42142535242', 'Estudiante', '$2b$10$HirfvmkpOQhMHSULPe7DG.roECl9sJM2AKEwrUAGzMWSrbAx4bua.', 'student', 0),
+('1022932004', 'Alejandro', '', '', '', 'Admin', '$2b$10$yst7DGpexS.dQ8jkcnnYReMGRLroUwvLjb8Jy/A8f7cdPLtYYL/XS', 'admin', 0),
+('312312331', 'VALENTINA TOBON', 'valen@gmail.com', '213124234', '4324234', 'valen.tobon', '$2b$10$GBVEUbFSyFyqjZrQhgin2.gYfFWXT5.MNsy3N1SlKay1ACiS9N5.i', 'student', 0);
 
 --
 -- Índices para tablas volcadas
@@ -150,13 +158,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `loans`
 --
 ALTER TABLE `loans`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `loan_devices`
 --
 ALTER TABLE `loan_devices`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- Restricciones para tablas volcadas

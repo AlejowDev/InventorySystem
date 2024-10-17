@@ -1,5 +1,9 @@
 /* Login.css */
 
+.container {
+  padding: 20px;
+}
+
 .auth-background {
     background-image: url('../../../assets/images/darck.jpg'); /* Ruta relativa desde el directorio público */
     background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */

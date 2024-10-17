@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 // Registro de usuario por admin
 exports.registerUserByAdmin = (req, res) => {
-    const { document, name, username, password, role } = req.body;
+    const { document, name, email, phone, studentNumber, username, password, role } = req.body;
 
     if (!role || !['student', 'moderator', 'admin'].includes(role)) {
         return res.status(400).json({ message: 'Rol no válido' });
@@ -17,6 +17,9 @@ exports.registerUserByAdmin = (req, res) => {
         const newUser = {
             document,
             name,
+            email,
+            phone,
+            studentNumber,
             username,
             password: hashedPassword,
             role,
