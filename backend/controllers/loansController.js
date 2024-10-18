@@ -19,9 +19,8 @@ const getAllLoans = (req, res) => {
 // Crear un nuevo préstamo
 const createLoan = (req, res) => {
     const loanData = {
-        devices: req.body.devices, // Array de dispositivos
+        devices: req.body.devices,
         receivingUser: req.body.receivingUser,
-        moderator: req.body.moderator,
         loanDate: req.body.loanDate,
         deliveryDate: req.body.deliveryDate,
         approval: req.body.approval,

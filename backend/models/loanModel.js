@@ -3,13 +3,12 @@ const db = require("../config/db");
 const Loan = {
   create: (loanData, callback) => {
     const sqlLoan =
-      "INSERT INTO loans (receivingUser, moderator, loanDate, deliveryDate, approval, state) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO loans (receivingUser, loanDate, deliveryDate, approval, state) VALUES (?, ?, ?, ?, ?)";
 
     db.query(
       sqlLoan,
       [
         loanData.receivingUser,
-        loanData.moderator,
         loanData.loanDate,
         loanData.deliveryDate,
         loanData.approval,
@@ -79,7 +78,7 @@ const Loan = {
     receivingUser.document AS receivingUser, 
     receivingUser.name AS receivingUserName,
     receivingUser.phone AS receivingUserPhone,
-    receivingUser.studentNumber AS receivingUserStudentNumber -- Corrige aquí el campo correcto en vez de repetir phone
+    receivingUser.studentNumber AS receivingUserStudentNumber
   FROM loans
   LEFT JOIN loan_devices ON loans.id = loan_devices.loan_id
   JOIN users AS receivingUser ON loans.receivingUser = receivingUser.document
