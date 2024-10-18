@@ -1,4 +1,6 @@
 import React from 'react'
+import ProtectedRoute from './ProtectedRoute'
+const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'));
 
 // Admin pages
 const AdminDashboard = React.lazy(() => import('./views/admin/Dashboard'))
@@ -7,12 +9,11 @@ const AdminNewUsers = React.lazy(() => import('./views/admin/NewUsers'))
 const AdminTools = React.lazy(() => import('./views/admin/Tools'))
 const AdminLoans = React.lazy(() => import('./views/admin/Loans'))
 
-
-
 //Moderator pages
 const ModeratorDashboard = React.lazy(() => import('./views/moderator/Dashboard'))
 const ModeratorUsers = React.lazy(() => import('./views/moderator/Users'))
-
+const ModeratorTools = React.lazy(() => import('./views/moderator/Tools'))
+const ModeratorLoans = React.lazy(() => import('./views/moderator/Loans'))
 
 //Student pages
 const StudentDashboard = React.lazy(() => import('./views/student/Dashboard'))
@@ -72,21 +73,141 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   // Admin
-  { path: '/admin/dashboard', name: 'Admin Dashboard', element: AdminDashboard },
-  { path: '/admin/users', name: 'Admin Users', element: AdminUsers },
-  { path: '/admin/newusers', name: 'Admin NewUsers', element: AdminNewUsers },
-  { path: '/admin/tools', name: 'Admin Tools', element: AdminTools },
-  { path: '/admin/loans', name: 'Admin Loans', element: AdminLoans },
-  //Moderator
-  { path: '/moderator/dashboard', name: 'Moderator Dashboard', element: ModeratorDashboard },
-  { path: '/moderator/users', name: 'Moderator Users', element: ModeratorUsers },
+  {
+    path: '/admin/dashboard',
+    name: 'Admin Dashboard',
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <DefaultLayout>
+          <AdminDashboard />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/admin/users',
+    name: 'Admin Users',
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <DefaultLayout>
+        <AdminUsers />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/admin/newusers',
+    name: 'Admin NewUsers',
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <DefaultLayout>
+        <AdminNewUsers />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/admin/tools',
+    name: 'Admin Tools',
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <DefaultLayout>
+        <AdminTools />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/admin/loans',
+    name: 'Admin Loans',
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <DefaultLayout>
+        <AdminLoans />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  // Moderator
+  {
+    path: '/moderator/dashboard',
+    name: 'Moderator Dashboard',
+    element: (
+      <ProtectedRoute allowedRoles={['moderator']}>
+        <DefaultLayout>
+        <ModeratorDashboard />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/moderator/users',
+    name: 'Moderator Users',
+    element: (
+      <ProtectedRoute allowedRoles={['moderator']}>
+        <DefaultLayout>
+        <ModeratorUsers />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/moderator/tools',
+    name: 'Moderator Tools',
+    element: (
+      <ProtectedRoute allowedRoles={['moderator']}>
+        <DefaultLayout>
+        <ModeratorTools />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/moderator/loans',
+    name: 'Moderator Loans',
+    element: (
+      <ProtectedRoute allowedRoles={['moderator']}>
+        <DefaultLayout>
+        <ModeratorLoans />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
 
-  //Student
-  { path: '/student/dashboard', name: 'Student Dashboard', element: StudentDashboard },
-  { path: '/student/loans', name: 'Student Loans', element: StudentLoans },
-  { path: '/student/newloan', name: 'Student NewLoan', element: StudentNewLoan },
-
-
+  // Student
+  {
+    path: '/student/dashboard',
+    name: 'Student Dashboard',
+    element: (
+      <ProtectedRoute allowedRoles={['student']}>
+        <DefaultLayout>
+        <StudentDashboard />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/student/loans',
+    name: 'Student Loans',
+    element: (
+      <ProtectedRoute allowedRoles={['student']}>
+        <DefaultLayout>
+        <StudentLoans />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/student/newloan',
+    name: 'Student NewLoan',
+    element: (
+      <ProtectedRoute allowedRoles={['student']}>
+        <DefaultLayout>
+        <StudentNewLoan />
+        </DefaultLayout>
+      </ProtectedRoute>
+    ),
+  },
 
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

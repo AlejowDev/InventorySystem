@@ -58,7 +58,7 @@ const NewLoan = () => {
 
     const loanData = {
       receivingUser: receivingUser,
-      moderator: '0100101001',
+      moderator: '0101010101',
       loanDate: formatDateToDatabase(new Date()),
       deliveryDate: deliveryDate,
       approval: 'Pendiente',

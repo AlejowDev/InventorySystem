@@ -25,7 +25,7 @@ const ModeratorUsers = () => {
       .get('http://localhost:8081/api/users')
       .then((response) => {
         const allUsers = response.data;
-        const nonAdminUsers = allUsers.filter((user) => user.role !== 'admin');
+        const nonAdminUsers = allUsers.filter((user) => user.role == 'student');
         setUsers(allUsers);
         setFilteredUsers(nonAdminUsers);
       })
@@ -50,7 +50,7 @@ const ModeratorUsers = () => {
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Usuarios</CCardHeader>
+            <CCardHeader>Estudiantes</CCardHeader>
             <CCardBody>
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap text-center">

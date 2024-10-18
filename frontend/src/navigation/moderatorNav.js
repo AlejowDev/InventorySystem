@@ -1,6 +1,6 @@
 // src/navigation/moderatorNav.js
 import CIcon from '@coreui/icons-react';
-import { cilSpeedometer, cilList, cilRoom } from '@coreui/icons';
+import { cilSpeedometer, cilList, cilRoom, cilBook, cilDevices } from '@coreui/icons';
 import { CNavItem, CNavTitle, CDropdownItem } from '@coreui/react';
 
 const handleLogout = () => {
@@ -25,13 +25,33 @@ const moderatorNav = (navigate) => [
   },
   {
     component: CNavTitle,
-    name: 'Usuarios',
+    name: 'PRESTAMOS',
   },
   {
     component: CNavItem,
-    name: 'Lista de usuarios',
+    name: 'Agenda de Préstamos',
+    to: '/moderator/loans',
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: 'Listas',
+  },
+  {
+    component: CNavItem,
+    name: 'Estudiantes',
     to: '/moderator/users',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: 'INVENTARIO',
+  },
+  {
+    component: CNavItem,
+    name: 'Lista de Inventario',
+    to: '/moderator/tools',
+    icon: <CIcon icon={cilDevices} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
@@ -42,7 +62,7 @@ const moderatorNav = (navigate) => [
     name: 'Cerrar sesión',
     href: '/login',
     onClick: handleLogout, // Llama a handleLogout al hacer clic
-    icon: <CIcon icon={cilRoom} className="me-2" />,
+    icon: <CIcon icon={cilRoom} customClassName="nav-icon" />,
   }
 ];
 

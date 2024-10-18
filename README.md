@@ -22,3 +22,23 @@ Dont't forget to connect your MySql database in the db.js file.
 
 ------------------------------------------------------------------------------------------------------------------------
 Developed by Alejandro Buritica 🍃
+
+
+Credentials 🔒
+
+ADMINISTRATOR
+
+username: Administrador
+password: AdminInventory2024
+
+MODERATOR
+
+username: Moderator
+password: ModeratorInventory2024
+
+STUDENT EXAMPLE
+
+username: Estudiante
+password: Estudiante
+
+

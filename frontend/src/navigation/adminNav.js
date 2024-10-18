@@ -71,7 +71,7 @@ const adminNav = (navigate) => [
     name: 'Cerrar sesión',
     href: '/login',
     onClick: handleLogout, // Llama a handleLogout al hacer clic
-    icon: <CIcon icon={cilRoom} className="me-2" />,
+    icon: <CIcon icon={cilRoom} customClassName="nav-icon" />,
   }
 ];
 
